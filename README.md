@@ -4,5 +4,5 @@ until now it has been tested on GNU/Linux only
 
 Recuirements:
 --------------
-gtk2
+gtk2  
 python2
