@@ -2,7 +2,7 @@
 This is an attempt to create a simple mail checker
 until now it has been tested on GNU/Linux only
 
-Recuirements:
+Requirements:
 --------------
 gtk2  
 python2
