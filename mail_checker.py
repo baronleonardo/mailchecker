@@ -47,10 +47,6 @@ class MailChecker:
 	self.password = str_credentials.splitlines()[1]
 	self.mailIMAP = str_credentials.splitlines()[2]
 	
-	print self.mail
-	print self.password
-	print self.mailIMAP
-	
         self.notification_icon = self.current_path \
             + self.notification_icon
 
