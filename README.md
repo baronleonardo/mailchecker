@@ -6,6 +6,7 @@ Requirements:
 --------------
 gtk2  
 python2
+pygtk
 
 How To Use:
 ------------
