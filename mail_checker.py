@@ -3,6 +3,9 @@
 
 import gtk
 import imaplib
+import pynotify
+import sys
+import os.path
 
 
 class MailChecker:
@@ -12,28 +15,62 @@ class MailChecker:
     mailIMAP = "imap.mail.com"
     mailbox = "INBOX"
 
+    # timer for repeatly cheaking new mails
     timeoutInSecs = 900
 
-    zeroMsgsIcons = "indicator-messages"
-    newMsgs = "indicator-messages-new"
+    # if you have a light-colored panel ..
+    # change zeroMsgsIcons to "indicator-messages-dark.svg"
+    zeroMsgsIcons = "indicator-messages.svg"
+    newMsgs = "indicator-messages-new.svg"
+
+    notification_icon = "mailIcon.png"
+
+    # transforms relative path into absolute path
+    # because libnotify needs absolute paths for some reason
+    current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
+
+    # used to compare current unread messages with those
+    # from last time we checked so that we would only send notifications
+    # when number of unread mails has changed
+    oldNumberOfMails = 0
 
     def __init__(self):
+        print(self.current_path)
+
+        self.notification_icon = self.current_path \
+            + self.notification_icon
+
         self.icon = gtk.StatusIcon()
         # add a tray icon
-        self.icon.set_from_icon_name(self.zeroMsgsIcons)
+        self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
         # right click signal and slot
         self.icon.connect('popup-menu', self.on_right_click)
         # timer for checking for new mails
         gtk.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
         # icon.connect('activate', on_left_click)
 
-    def message(self, data=None):
-        """Function to display messages to the user."""
+        # initialize pynotify... "Basics" can be changed to whatever... it
+        # doesn't matter.
+        if not pynotify.init("Basics"):
+            sys.exit(1)
 
-        msg = gtk.MessageDialog(None, gtk.DIALOG_MODAL,
-                                gtk.MESSAGE_INFO, gtk.BUTTONS_OK, data)
-        msg.run()
-        msg.destroy()
+    def send_notification(self, mailNumber):
+        str_mailNumber = str(mailNumber)
+
+        # to display "mail" if only one mail is there, and "mails" if there's
+        # more than one mail.
+        if mailNumber == 1:
+            newMail = " new mail."
+        else:
+            newMail = " new mails."
+
+        self.notify = pynotify.Notification(
+            "You've Got Mail!", str_mailNumber + newMail,
+            self.notification_icon)
+
+        if not self.notify.show():
+            print("Failed to send notification")
+            sys.exit(1)
 
     def checkMail(self, data=None):
         connection = imaplib.IMAP4_SSL(self.mailIMAP)
@@ -45,13 +82,23 @@ class MailChecker:
         # print connection.list()
         unread_msgs_num = len(connection.search(None, 'UnSeen')[1][0].split())
 
+        if unread_msgs_num != self.oldNumberOfMails:
+            numberOfmailsChanged = True
+        else:
+            numberOfmailsChanged = False
+
+        self.oldNumberOfMails = unread_msgs_num
+
         # to help in debugging
         print(unread_msgs_num)
 
         if unread_msgs_num != 0:
-            self.icon.set_from_icon_name(self.newMsgs)
-        # self.icon.status_icon_new_from_icon_name('indicator-messages-new')
-        # this show double tray icons
+            # change tray icon for new messages
+            self.icon.set_from_file(self.current_path + self.newMsgs)
+            # if number of messages changed from last check
+            if numberOfmailsChanged:
+                self.send_notification(unread_msgs_num)
+
         connection.shutdown()
         # this return used, to make sure that the timer will be in
         #  infinite loop
@@ -84,10 +131,6 @@ class MailChecker:
 
     def main(self):
         gtk.main()
-
-
-# def on_left_click(event):
-#     message("Status Icon Left Clicked")
 
 if __name__ == '__main__':
     mail_checker = MailChecker()

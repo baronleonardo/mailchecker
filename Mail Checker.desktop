@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Mail Checker
+Comment=A very simple script that checks for unread mail
+Exec=python /home/adam/Workspace/mailchecker/mail_checker.py
+Icon=/home/adam/Workspace/mailchecker/mailIcon.png
+Terminal=false
+Name[en_US]=Mail Checker
