@@ -54,6 +54,11 @@ class MailChecker:
         if not pynotify.init("Basics"):
             sys.exit(1)
 
+        # checkmail upon startup
+        # "initial" is used to make sure that this timer will work
+        # only once and will not interfere with the main timer
+        gtk.timeout_add(1 * 1000, self.checkMail, "initial")
+
     def send_notification(self, mailNumber):
         str_mailNumber = str(mailNumber)
 
@@ -102,7 +107,10 @@ class MailChecker:
         connection.shutdown()
         # this return used, to make sure that the timer will be in
         #  infinite loop
-        return True
+        if data = "initial":
+            return False
+        else:
+            return True
 
     def close_app(self, data=None):
         gtk.main_quit()
