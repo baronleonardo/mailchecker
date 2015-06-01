@@ -6,6 +6,6 @@ Encoding=UTF-8
 Name=Mail Checker
 Comment=A very simple script that checks for unread mail
 Exec=sh -c "python2 mail_checker.py"
-Icon=/mailIcon.png
+Icon=mailIcon.png
 Terminal=false
 Name[en_US]=Mail Checker
