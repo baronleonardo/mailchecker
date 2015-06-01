@@ -10,6 +10,11 @@ import os.path
 
 class MailChecker:
 
+
+    # transforms relative path into absolute path
+    # because libnotify needs absolute paths for some reason
+    current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
+    
     mail = "example@mail.com"
     password = "PASSWORD"
     mailIMAP = "imap.mail.com"
@@ -25,10 +30,6 @@ class MailChecker:
 
     notification_icon = "mailIcon.png"
 
-    # transforms relative path into absolute path
-    # because libnotify needs absolute paths for some reason
-    current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
-
     # used to compare current unread messages with those
     # from last time we checked so that we would only send notifications
     # when number of unread mails has changed
@@ -36,7 +37,16 @@ class MailChecker:
 
     def __init__(self):
         print(self.current_path)
+	
+	# reads credentials from a file called 'credentials' because it's never a good idea to have your crendentials 
+	# hardwired to the code.
+	credentials = open(self.current_path + "credentials", 'r')
+	str_credentials = credentials.read()
 
+	self.mail = str_credentials.splitlines()[0]
+	self.password = str_credentials.splitlines()[1]
+	self.mailIMAP = str_credentials.splitlines()[2]
+	
         self.notification_icon = self.current_path \
             + self.notification_icon
 
