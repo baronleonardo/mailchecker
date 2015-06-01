@@ -5,7 +5,7 @@ until now it has been tested on GNU/Linux only
 Requirements:
 --------------
 gtk2  
-python2
+python2 
 pygtk
 
 How To Use:
