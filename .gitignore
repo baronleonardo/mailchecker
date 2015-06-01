@@ -55,3 +55,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# file that contains usernames and passwords
+credentials
