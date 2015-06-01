@@ -107,7 +107,7 @@ class MailChecker:
         connection.shutdown()
         # this return used, to make sure that the timer will be in
         #  infinite loop
-        if data = "initial":
+        if data == "initial":
             return False
         else:
             return True
