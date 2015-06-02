@@ -1,9 +1,10 @@
 
 # !/usr/bin/env python2
 
-import gtk
+from gi.repository import Gtk
+from gi.repository import Notify
+from gi.repository import GObject
 import imaplib
-import pynotify
 import sys
 import os.path
 import encrypt
@@ -35,6 +36,9 @@ class MailChecker:
     # when number of unread mails has changed
     oldNumberOfMails = 0
 
+    # A right-clicked menu
+    menu = Gtk.Menu()
+
     def __init__(self):
         print(self.current_path)
 
@@ -53,24 +57,27 @@ class MailChecker:
         self.notification_icon = self.current_path \
             + self.notification_icon
 
-        self.icon = gtk.StatusIcon()
+        self.icon = Gtk.StatusIcon()
         # add a tray icon
         self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
         # right click signal and slot
         self.icon.connect('popup-menu', self.on_right_click)
         # timer for checking for new mails
-        gtk.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+        GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
         # icon.connect('activate', on_left_click)
 
         # initialize pynotify... "Basics" can be changed to whatever... it
         # doesn't matter.
-        if not pynotify.init("Basics"):
+        if not Notify.init("Basics"):
             sys.exit(1)
 
         # checkmail upon startup
         # "initial" is used to make sure that this timer will work
         # only once and will not interfere with the main timer
-        gtk.timeout_add(1 * 1000, self.checkMail, "initial")
+        GObject.timeout_add(1 * 1000, self.checkMail, "initial")
+
+        # Create a right-clicked menu
+        self.create_menu()
 
     def send_notification(self, mailNumber):
         str_mailNumber = str(mailNumber)
@@ -82,7 +89,7 @@ class MailChecker:
         else:
             newMail = " new mails."
 
-        self.notify = pynotify.Notification(
+        self.notify = Notify.Notification.new(
             "You've Got Mail!", str_mailNumber + newMail,
             self.notification_icon)
 
@@ -126,32 +133,32 @@ class MailChecker:
             return True
 
     def close_app(self, data=None):
-        gtk.main_quit()
+        Gtk.main_quit()
 
-    def make_menu(self, event_button, event_time, data=None):
-        menu = gtk.Menu()
-        check_mail_item = gtk.MenuItem("Check Mail")
-        close_item = gtk.MenuItem("Close App")
+    def create_menu(self):
+
+        check_mail_item = Gtk.MenuItem("Check Mail")
+        close_item = Gtk.MenuItem("Close App")
 
         # Append the menu items
-        menu.append(check_mail_item)
-        menu.append(close_item)
+        self.menu.append(check_mail_item)
+        self.menu.append(close_item)
         # add callbacks
         check_mail_item.connect_object(
             "activate", self.checkMail, "Check Mail")
         close_item.connect_object("activate", self.close_app, "Close App")
         # Show the menu items
-        check_mail_item.show()
-        close_item.show()
+        self.menu.show_all()
 
+    def show_menu(self, event_button, event_time):
         # Popup the menu
-        menu.popup(None, None, None, event_button, event_time)
+        self.menu.popup(None, None, None, None, event_button, event_time)
 
     def on_right_click(self, data, event_button, event_time):
-        self.make_menu(event_button, event_time)
+        self.show_menu(event_button, event_time)
 
     def main(self):
-        gtk.main()
+        Gtk.main()
 
 if __name__ == '__main__':
     mail_checker = MailChecker()
