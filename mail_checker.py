@@ -8,6 +8,7 @@ import imaplib
 import sys
 import os.path
 import encrypt
+import settings_ui
 
 
 class MailChecker:
@@ -138,23 +139,33 @@ class MailChecker:
         Gtk.main_quit()
 
     def create_menu(self):
-
         check_mail_item = Gtk.MenuItem("Check Mail")
-        close_item = Gtk.MenuItem("Close App")
+        seprator_item = Gtk.SeparatorMenuItem()
+        settings_item = Gtk.MenuItem("Settings")
+        close_item = Gtk.MenuItem("Close")
 
         # Append the menu items
         self.menu.append(check_mail_item)
+        self.menu.append(seprator_item)
+        self.menu.append(settings_item)
         self.menu.append(close_item)
+
         # add callbacks
         check_mail_item.connect_object(
             "activate", self.checkMail, "Check Mail")
-        close_item.connect_object("activate", self.close_app, "Close App")
+        settings_item.connect_object(
+            "activate", self.show_settings, "Settings")
+        close_item.connect_object("activate", self.close_app, "Close")
         # Show the menu items
         self.menu.show_all()
 
     def show_menu(self, event_button, event_time):
         # Popup the menu
         self.menu.popup(None, None, None, None, event_button, event_time)
+
+    def show_settings(self, data=None):
+        # Show Settings dialog
+        settings_ui.show_dialog()
 
     def on_right_click(self, data, event_button, event_time):
         self.show_menu(event_button, event_time)
