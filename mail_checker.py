@@ -133,7 +133,7 @@ class MailChecker:
         self.oldNumberOfMails = unread_msgs_num
 
         # to help in debugging
-        print("Mails # = " + unread_msgs_num)
+        print("Mails # = " + str(unread_msgs_num))
 
         if unread_msgs_num != 0:
             # change tray icon for new messages
