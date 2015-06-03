@@ -41,19 +41,7 @@ class MailChecker:
     menu = Gtk.Menu()
 
     def __init__(self):
-        print(self.current_path)
-
-        # reads credentials from a file called 'credentials'
-        # because it's never a good idea to have your crendentials
-        # hardwired to the code.
-        credentials = open(self.current_path + "credentials", 'r')
-        str_credentials = credentials.read()
-
-        self.mail = str_credentials.splitlines()[0]
-        self.password = str_credentials.splitlines()[1]
-        self.mailIMAP = str_credentials.splitlines()[2]
-
-        self.password = encrypt.dencrypt("decrypt", self.password)
+        # print(self.current_path)
 
         self.notification_icon = self.current_path \
             + self.notification_icon
@@ -63,8 +51,7 @@ class MailChecker:
         self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
         # right click signal and slot
         self.icon.connect('popup-menu', self.on_right_click)
-        # timer for checking for new mails
-        GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+
         # icon.connect('activate', on_left_click)
 
         # initialize pynotify... "Basics" can be changed to whatever... it
@@ -72,13 +59,44 @@ class MailChecker:
         if not Notify.init("Basics"):
             sys.exit(1)
 
+        # Create a right-clicked menu
+        self.create_menu()
+
+        # check if mail data exist
+        self.check_credentials()
+
+    def check_credentials(self):
+        # Check if mail acoount file exists
+        f = os.path.exists(self.current_path + "credentials")
+        if f is True:
+            self.initiate()
+        else:
+            os.system("touch '" + self.current_path + "credentials'")
+            self.show_settings()
+
+    def initiate(self, data=None):
+        # reads credentials from a file called 'credentials'
+        # because it's never a good idea to have your crendentials
+        # hardwired to the code.
+        credentials = open(self.current_path + "credentials", 'r')
+        str_credentials = credentials.read()
+
+        print(str_credentials)
+
+        self.mail = str_credentials.splitlines()[0]
+        self.password = str_credentials.splitlines()[1]
+        self.mailIMAP = str_credentials.splitlines()[2]
+        self.mailbox = str_credentials.splitlines()[3]
+
+        self.password = encrypt.dencrypt("decrypt", self.password)
+
+        # timer for checking for new mails
+        GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+
         # checkmail upon startup
         # "initial" is used to make sure that this timer will work
         # only once and will not interfere with the main timer
         GObject.timeout_add(1 * 1000, self.checkMail, "initial")
-
-        # Create a right-clicked menu
-        self.create_menu()
 
     def send_notification(self, mailNumber):
         str_mailNumber = str(mailNumber)
@@ -104,8 +122,7 @@ class MailChecker:
             exit("no conn")
 
         connection.select(self.mailbox)
-        # print the mailboxes in the mail
-        # print connection.list()
+        # Number of unread mails
         unread_msgs_num = len(connection.search(None, 'UnSeen')[1][0].split())
 
         if unread_msgs_num != self.oldNumberOfMails:
@@ -116,7 +133,7 @@ class MailChecker:
         self.oldNumberOfMails = unread_msgs_num
 
         # to help in debugging
-        print(unread_msgs_num)
+        print("Mails # = " + unread_msgs_num)
 
         if unread_msgs_num != 0:
             # change tray icon for new messages
@@ -165,7 +182,12 @@ class MailChecker:
 
     def show_settings(self, data=None):
         # Show Settings dialog
-        settings_ui.show_dialog()
+        dialog_builder = settings_ui.DialogBuilder()
+        # Get save Button from Settings dialog
+        save_button = dialog_builder.get_save_button()
+        save_button.connect('clicked', self.initiate)
+        # Show Settings Dialog
+        dialog_builder.show_dialog()
 
     def on_right_click(self, data, event_button, event_time):
         self.show_menu(event_button, event_time)
