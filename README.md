@@ -19,11 +19,9 @@ How To Use:
 Example for how the credentials file may look like:
 ---------------------------------------------------
 
-```
 example@mail.com
 PASSWORD
 imap.mail.com
-```
 
 - Gmail -> "imap.gmail.com"   
 - Yahoo -> "imap.yahoo.com"   
