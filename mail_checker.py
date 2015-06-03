@@ -113,6 +113,8 @@ class MailChecker:
             # if number of messages changed from last check
             if numberOfmailsChanged:
                 self.send_notification(unread_msgs_num)
+        else:
+            self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
 
         connection.shutdown()
         # this return used, to make sure that the timer will be in
