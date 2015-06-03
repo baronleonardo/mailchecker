@@ -10,18 +10,19 @@ pygtk
 
 How To Use:
 ------------
-1. Create a file called 'credentials' in the same folder containing the script
-2. in the first line of that file type in your email
-3. in the second line type in your password
-4. in the third line type in your imap mail domain
+~~1. Create a file called 'credentials' in the same folder containing the script~~  
+~~2. in the first line of that file type in your email~~  
+~~3. in the second line type in your password~~   
+~~4. in the third line type in your imap mail domain~~  
 5. open a terminal and run `python2 mail_checker.py`
 
 Example for how the credentials file may look like:
 ---------------------------------------------------
 
-example@mail.com
-PASSWORD
-imap.mail.com
+example@mail.com  
+ENCRYPTED PASSWORD!   
+imap.mail.com   
+INBOX   
 
 - Gmail -> "imap.gmail.com"   
 - Yahoo -> "imap.yahoo.com"   
