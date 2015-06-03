@@ -86,7 +86,6 @@ class MailChecker:
         self.mail = str_credentials.splitlines()[0]
         self.password = str_credentials.splitlines()[1]
         self.mailIMAP = str_credentials.splitlines()[2]
-        self.mailbox = str_credentials.splitlines()[3]
 
         self.password = encrypt.dencrypt("decrypt", self.password)
 

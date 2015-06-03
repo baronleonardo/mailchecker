@@ -27,7 +27,6 @@ class Handler:
         email = builder.get_object('email_entry').get_text()
         password = builder.get_object('password_entry').get_text()
         imap = builder.get_object('imap_entry').get_text()
-        mailbox = builder.get_object('mailbox_entry').get_text()
 
         # Encrypt the password
         password = encrypt_password(password)
@@ -37,8 +36,6 @@ class Handler:
         credentials.write(email + "\n")
         credentials.write(password + "\n")
         credentials.write(imap + "\n")
-        credentials.write(mailbox)
-        credentials.close()
 
         cancel_button = self.dialog_builder.get_builder().get_object(
             "cancel_button")
