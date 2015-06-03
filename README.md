@@ -16,10 +16,11 @@ How To Use:
 Example for what you might type into the settings dialog:
 ---------------------------------------------------
 
+```
 example@mail.com  
-PASSWORD   
-imap.mail.com   
-INBOX   
+PASSWORD 
+imap.mail.com
+```
 
 ### as for the IMAP field, here's an example of what you should type in:
 - Gmail -> `imap.gmail.com`
