@@ -36,6 +36,7 @@ class MailChecker:
     # from last time we checked so that we would only send notifications
     # when number of unread mails has changed
     oldNumberOfMails = 0
+    unread_msgs_num = 0
 
     # A right-clicked menu
     menu = Gtk.Menu()
@@ -46,11 +47,15 @@ class MailChecker:
         self.notification_icon = self.current_path \
             + self.notification_icon
 
-        self.icon = Gtk.StatusIcon()
+        self.tray_icon = Gtk.StatusIcon()
         # add a tray icon
-        self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
+        self.tray_icon.set_from_file(self.current_path + self.zeroMsgsIcons)
         # right click signal and slot
-        self.icon.connect('popup-menu', self.on_right_click)
+        self.tray_icon.connect('popup-menu', self.on_right_click)
+
+        # Tray icon tooltip
+        self.tray_icon.set_tooltip_text(
+            "You have " + str(self.unread_msgs_num) + " new messeges.")
 
         # icon.connect('activate', on_left_click)
 
@@ -123,26 +128,32 @@ class MailChecker:
 
         connection.select(self.mailbox)
         # Number of unread mails
-        unread_msgs_num = len(connection.search(None, 'UnSeen')[1][0].split())
+        self.unread_msgs_num = len(
+            connection.search(None, 'UnSeen')[1][0].split())
 
-        if unread_msgs_num != self.oldNumberOfMails:
+        if self.unread_msgs_num != self.oldNumberOfMails:
             numberOfmailsChanged = True
         else:
             numberOfmailsChanged = False
 
-        self.oldNumberOfMails = unread_msgs_num
+        self.oldNumberOfMails = self.unread_msgs_num
 
         # to help in debugging
-        print("Mails # = " + str(unread_msgs_num))
+        print("Mails # = " + str(self.unread_msgs_num))
 
-        if unread_msgs_num != 0:
+        if self.unread_msgs_num != 0:
             # change tray icon for new messages
-            self.icon.set_from_file(self.current_path + self.newMsgs)
+            self.tray_icon.set_from_file(self.current_path + self.newMsgs)
             # if number of messages changed from last check
             if numberOfmailsChanged:
-                self.send_notification(unread_msgs_num)
+                self.send_notification(self.unread_msgs_num)
         else:
-            self.icon.set_from_file(self.current_path + self.zeroMsgsIcons)
+            self.tray_icon.set_from_file(
+                self.current_path + self.zeroMsgsIcons)
+
+        # Tray icon tooltip
+        self.tray_icon.set_tooltip_text(
+            "You have " + str(self.unread_msgs_num) + " new messeges.")
 
         connection.shutdown()
         # this return used, to make sure that the timer will be in
