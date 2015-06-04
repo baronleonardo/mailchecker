@@ -41,7 +41,6 @@
                 <property name="can_focus">True</property>
                 <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="relief">none</property>
                 <signal name="clicked" handler="on_delete_window" swapped="no"/>
               </object>
               <packing>
