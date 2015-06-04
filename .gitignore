@@ -58,3 +58,5 @@ target/
 
 # file that contains usernames and passwords
 credentials
+# ignore backup files
+*~
