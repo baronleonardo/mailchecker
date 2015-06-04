@@ -9,6 +9,7 @@ import sys
 import os.path
 import encrypt
 import settings_ui
+import threading
 
 
 class MailChecker:
@@ -120,8 +121,23 @@ class MailChecker:
             print("Failed to send notification")
             sys.exit(1)
 
-    def checkMail(self, data=None):
+    def checkMail(self, state=None):
+        # Run check mail in a thread
+        check_mail = threading.Thread(target=self.thread_check_mail)
+        check_mail.start()
+
+        # this return used, to make sure that the timer will be in
+        #  infinite loop
+        if state == "initial":
+            return False
+        else:
+            return True
+
+    def thread_check_mail(self):
+        """Don't call this method call checkMail() instead"""
+
         connection = imaplib.IMAP4_SSL(self.mailIMAP)
+
         if connection.login(self.mail, self.password)[0] != 'OK':
             exit("no conn")
 
@@ -154,13 +170,8 @@ class MailChecker:
         self.tray_icon.set_tooltip_text(
             "You have " + str(self.unread_msgs_num) + " new messeges.")
 
+        # Close the connection
         connection.shutdown()
-        # this return used, to make sure that the timer will be in
-        #  infinite loop
-        if data == "initial":
-            return False
-        else:
-            return True
 
     def close_app(self, data=None):
         Gtk.main_quit()
