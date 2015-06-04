@@ -7,6 +7,7 @@ Requirements:
 gtk2  
 python2     
 pygtk
+PyGObject 3.10.2+
 
 How To Use:
 ------------
@@ -26,12 +27,13 @@ imap.mail.com
 
 TO-DO list:
 ------------
-- [ ] App freezes when checking for mails, that needs to be fixed (maybe use threads?).
+- [x] App freezes when checking for mails, that needs to be fixed (maybe use threads?).
 - [ ] Restart timer on new mail account.
 - [ ] Create new method - on_new_mail() - for better code readiblity and organization.
 - [ ] Support for multiple accounts.
 - [ ] User can change applet icons from the settings dialog.
 - [ ] User can run a command or a script if he recieves a new mail.
 - [ ] User can run a command or a script if he left-click on the tray icon.
+- [ ] User can set the check-mail timer
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [ ] Edit existing mail account.
