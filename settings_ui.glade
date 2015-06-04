@@ -36,11 +36,12 @@
             </child>
             <child>
               <object class="GtkButton" id="cancel_button">
-                <property name="label" translatable="yes">Close</property>
+                <property name="label" translatable="yes">Cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="relief">none</property>
                 <signal name="clicked" handler="on_delete_window" swapped="no"/>
               </object>
               <packing>

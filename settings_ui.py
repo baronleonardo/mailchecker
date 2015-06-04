@@ -39,7 +39,7 @@ class Handler:
 
         cancel_button = self.dialog_builder.get_builder().get_object(
             "cancel_button")
-        cancel_button.set_label("Close...")
+        cancel_button.set_label("Close")
 
         # Close the dialog
         # self.dialog.get_dialog().destroy()
