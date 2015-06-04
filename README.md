@@ -15,23 +15,23 @@ How To Use:
 
 Example for what you might type into the settings dialog:
 ---------------------------------------------------
-
+```
 example@mail.com  
 PASSWORD 
 imap.mail.com
-
+```
 ### as for the IMAP field, here's an example of what you should type in:
 - Gmail -> `imap.gmail.com`	
 - Yahoo -> `imap.yahoo.com` 
 
 TO-DO list:
 ------------
-- [ ] solve hang problem when the mail is checking
-- [ ] restart timer on new mail account
-- [ ] create new method - on_new_mail() - for a more tide organisation
-- [ ] can add more than one mail account
-- [ ] can change applet icons from the settings dialog
-- [ ] user can run a command or a script if he recieves a new mail
-- [ ] user can run a command or a script if he left-click on the tray icon
-- [ ] save user data in default configuration folder
-- [ ] edit existing mail account
+- [ ] App freezes when checking for mails, that needs to be fixed (maybe use threads?).
+- [ ] Restart timer on new mail account.
+- [ ] Create new method - on_new_mail() - for better code readiblity and organization.
+- [ ] Support for multiple accounts.
+- [ ] User can change applet icons from the settings dialog.
+- [ ] User can run a command or a script if he recieves a new mail.
+- [ ] User can run a command or a script if he left-click on the tray icon.
+- [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
+- [ ] Edit existing mail account.
