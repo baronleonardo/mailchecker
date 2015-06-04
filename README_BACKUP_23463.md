@@ -16,13 +16,19 @@ How To Use:
 Example for what you might type into the settings dialog:
 ---------------------------------------------------
 
+```
 example@mail.com  
 PASSWORD 
 imap.mail.com
+```
 
+<<<<<<< HEAD
 ### as for the IMAP field, here's an example of what you should type in:
-- Gmail -> `imap.gmail.com`	
-- Yahoo -> `imap.yahoo.com` 
+- Gmail -> `imap.gmail.com`
+- Yahoo -> `imap.yahoo.com`
+=======
+- Gmail -> "imap.gmail.com"   
+- Yahoo -> "imap.yahoo.com"   
 
 TO-DO list:
 ------------
@@ -35,3 +41,4 @@ TO-DO list:
 - [ ] user can run a command or a script if he left-click on the tray icon
 - [ ] save user data in default configuration folder
 - [ ] edit existing mail account
+>>>>>>> 57d1118813d5606c0d6bfcd2c952b62232794b78
