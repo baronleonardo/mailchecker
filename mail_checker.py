@@ -75,12 +75,14 @@ class MailChecker:
         # Check if mail acoount file exists
         f = os.path.exists(self.current_path + "credentials")
         if f is True:
-            self.initiate()
+            self.initiate(None, 'initiate')
         else:
             os.system("touch '" + self.current_path + "credentials'")
             self.show_settings()
 
-    def initiate(self, data=None):
+    # obj parameter used because signals pushed from save-button
+    # return save-button object as first argument
+    def initiate(self, obj=None, state=None):
         # reads credentials from a file called 'credentials'
         # because it's never a good idea to have your crendentials
         # hardwired to the code.
@@ -95,13 +97,31 @@ class MailChecker:
 
         self.password = encrypt.dencrypt("decrypt", self.password)
 
-        # timer for checking for new mails
-        GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+        if state == 'initiate':
+            self.timer('initiate')
 
-        # checkmail upon startup
-        # "initial" is used to make sure that this timer will work
-        # only once and will not interfere with the main timer
-        GObject.timeout_add(1 * 1000, self.checkMail, "initial")
+        elif state == 'reinitiate':
+            self.timer('reinitiate')
+
+    def timer(self, state=None):
+        self.timer_id = 0
+
+        if state == "initiate":
+            # timer for checking for new mails
+            GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+
+            # checkmail upon startup
+            # "initial" is used to make sure that this timer will work
+            # only once and will not interfere with the main timer
+            self.timer_id = GObject.timeout_add(
+                1 * 1000, self.checkMail, "initial")
+            print("timer id=" + str(self.timer_id) + " added")
+
+        elif state == "reinitiate":
+            GObject.source_remove(self.timer_id)
+            print("timer id=" + str(self.timer_id) + " removed")
+            # initiate a new timer
+            self.timer("initiate")
 
     def send_notification(self, mailNumber):
         str_mailNumber = str(mailNumber)
@@ -122,6 +142,7 @@ class MailChecker:
             sys.exit(1)
 
     def checkMail(self, state=None):
+        print("state = " + state)
         # Run check mail in a thread
         check_mail = threading.Thread(target=self.thread_check_mail)
         check_mail.start()
@@ -204,11 +225,16 @@ class MailChecker:
     def show_settings(self, data=None):
         # Show Settings dialog
         dialog_builder = settings_ui.DialogBuilder()
-        # Get save Button from Settings dialog
-        save_button = dialog_builder.get_save_button()
-        save_button.connect('clicked', self.initiate)
+        # Construct signals
+        self.settings_dialog_signals(dialog_builder)
         # Show Settings Dialog
         dialog_builder.show_dialog()
+
+    def settings_dialog_signals(self, dialog_builder):
+        # Get save Button from Settings dialog
+        save_button = dialog_builder.get_save_button()
+
+        save_button.connect('clicked', self.initiate, 'reinitiate')
 
     def on_right_click(self, data, event_button, event_time):
         self.show_menu(event_button, event_time)
