@@ -45,10 +45,9 @@ class Handler:
         # self.dialog.get_dialog().destroy()
         # save = dialog.get_object('save_button')
 
-# Encrypt password
-
 
 def encrypt_password(password):
+    """"Encrypt Password"""
     password = encrypt.dencrypt("encrypt", password)
     return password
 

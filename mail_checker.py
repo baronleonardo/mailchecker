@@ -28,8 +28,9 @@ class MailChecker:
 
     # if you have a light-colored panel ..
     # change zeroMsgsIcons to "indicator-messages-dark.svg"
-    zeroMsgsIcons = "indicator-messages.svg"
-    newMsgs = "indicator-messages-new.svg"
+    zero_messages_tray_icon = "indicator-messages.svg"
+    new_messgaes_tray_icon = "indicator-messages-new.svg"
+    error_tray_icon = "indicator-messages-error.svg"
 
     notification_icon = "mailIcon.png"
 
@@ -50,7 +51,8 @@ class MailChecker:
 
         self.tray_icon = Gtk.StatusIcon()
         # add a tray icon
-        self.tray_icon.set_from_file(self.current_path + self.zeroMsgsIcons)
+        self.tray_icon.set_from_file(
+            self.current_path + self.zero_messages_tray_icon)
         # right click signal and slot
         self.tray_icon.connect('popup-menu', self.on_right_click)
 
@@ -133,11 +135,11 @@ class MailChecker:
         else:
             newMail = " new mails."
 
-        self.notify = Notify.Notification.new(
+        notify = Notify.Notification.new(
             "You've Got Mail!", str_mailNumber + newMail,
             self.notification_icon)
 
-        if not self.notify.show():
+        if not notify.show():
             print("Failed to send notification")
             sys.exit(1)
 
@@ -157,42 +159,58 @@ class MailChecker:
     def thread_check_mail(self):
         """Don't call this method call checkMail() instead"""
 
-        connection = imaplib.IMAP4_SSL(self.mailIMAP)
+        try:
+            connection = imaplib.IMAP4_SSL(self.mailIMAP)
 
-        if connection.login(self.mail, self.password)[0] != 'OK':
-            exit("no conn")
+            if connection.login(self.mail, self.password)[0] != 'OK':
+                exit("no conn")
 
-        connection.select(self.mailbox)
-        # Number of unread mails
-        self.unread_msgs_num = len(
-            connection.search(None, 'UnSeen')[1][0].split())
+            connection.select(self.mailbox)
+            # Number of unread mails
+            self.unread_msgs_num = len(
+                connection.search(None, 'UnSeen')[1][0].split())
 
-        if self.unread_msgs_num != self.oldNumberOfMails:
-            numberOfmailsChanged = True
-        else:
-            numberOfmailsChanged = False
+            if self.unread_msgs_num != self.oldNumberOfMails:
+                numberOfmailsChanged = True
+            else:
+                numberOfmailsChanged = False
 
-        self.oldNumberOfMails = self.unread_msgs_num
+            self.oldNumberOfMails = self.unread_msgs_num
 
-        # to help in debugging
-        print("Mails # = " + str(self.unread_msgs_num))
+            # to help in debugging
+            print("Mails # = " + str(self.unread_msgs_num))
 
-        if self.unread_msgs_num != 0:
-            # change tray icon for new messages
-            self.tray_icon.set_from_file(self.current_path + self.newMsgs)
-            # if number of messages changed from last check
-            if numberOfmailsChanged:
-                self.send_notification(self.unread_msgs_num)
-        else:
-            self.tray_icon.set_from_file(
-                self.current_path + self.zeroMsgsIcons)
+            if self.unread_msgs_num != 0:
+                # change tray icon for new messages
+                self.tray_icon.set_from_file(
+                    self.current_path + self.new_messgaes_tray_icon)
+                # if number of messages changed from last check
+                if numberOfmailsChanged:
+                    self.send_notification(self.unread_msgs_num)
+            else:
+                self.tray_icon.set_from_file(
+                    self.current_path + self.zero_messages_tray_icon)
 
-        # Tray icon tooltip
-        self.tray_icon.set_tooltip_text(
-            "You have " + str(self.unread_msgs_num) + " new messeges.")
+            # Tray icon tooltip
+            self.tray_icon.set_tooltip_text(
+                "You have " + str(self.unread_msgs_num) + " new messeges.")
 
-        # Close the connection
-        connection.shutdown()
+            # Close the connection
+            connection.shutdown()
+
+        except:
+            self.invaild_mail_data()
+            print("Invaild mail account data")
+
+    def invaild_mail_data(self):
+        # Chnage tray icon to red to indicate an error
+        self.tray_icon.set_from_file(
+            self.current_path + self.error_tray_icon)
+        # Send notification - Invaild Mail account data
+        icon = Gtk.STOCK_DIALOG_ERROR
+        notify = Notify.Notification.new(
+            "Error!", "Invaild Mail account data", icon)
+        notify.show()
 
     def close_app(self, data=None):
         Gtk.main_quit()
