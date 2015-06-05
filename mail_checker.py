@@ -166,34 +166,17 @@ class MailChecker:
                 exit("no conn")
 
             connection.select(self.mailbox)
+
             # Number of unread mails
             self.unread_msgs_num = len(
                 connection.search(None, 'UnSeen')[1][0].split())
 
-            if self.unread_msgs_num != self.oldNumberOfMails:
-                numberOfmailsChanged = True
-            else:
-                numberOfmailsChanged = False
-
-            self.oldNumberOfMails = self.unread_msgs_num
-
-            # to help in debugging
-            print("Mails # = " + str(self.unread_msgs_num))
-
-            if self.unread_msgs_num != 0:
-                # change tray icon for new messages
-                self.tray_icon.set_from_file(
-                    self.current_path + self.new_messgaes_tray_icon)
-                # if number of messages changed from last check
-                if numberOfmailsChanged:
-                    self.send_notification(self.unread_msgs_num)
-            else:
+            if self.unread_msgs_num == 0:
                 self.tray_icon.set_from_file(
                     self.current_path + self.zero_messages_tray_icon)
-
-            # Tray icon tooltip
-            self.tray_icon.set_tooltip_text(
-                "You have " + str(self.unread_msgs_num) + " new messeges.")
+                print("Zero new mails")
+            else:
+                self.on_new_mail()
 
             # Close the connection
             connection.shutdown()
@@ -201,6 +184,31 @@ class MailChecker:
         except:
             self.invaild_mail_data()
             print("Invaild mail account data")
+
+    def on_new_mail(self):
+
+        if self.unread_msgs_num != self.oldNumberOfMails:
+            is_numberOfmailsChanged = True
+        else:
+            is_numberOfmailsChanged = False
+
+        self.oldNumberOfMails = self.unread_msgs_num
+
+        # to help in debugging
+        print("Mails # = " + str(self.unread_msgs_num))
+
+        # change tray icon for new messages
+        self.tray_icon.set_from_file(
+            self.current_path + self.new_messgaes_tray_icon)
+        # if number of messages changed from last check
+        if is_numberOfmailsChanged:
+            self.send_notification(self.unread_msgs_num)
+        else:
+            print("Unchanged number of new mails")
+
+        # Tray icon tooltip
+        self.tray_icon.set_tooltip_text(
+            "You have " + str(self.unread_msgs_num) + " new messeges.")
 
     def invaild_mail_data(self):
         # Chnage tray icon to red to indicate an error

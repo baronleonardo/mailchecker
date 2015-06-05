@@ -30,7 +30,7 @@ TO-DO list:
 - [x] App freezes when checking for mails, that needs to be fixed (maybe use threads?).
 - [x] Restart timer on new mail account.
 - [x] Change tray icon color and send a notification if mail account data is invaild or wrong
-- [ ] Create new method - on_new_mail() - for better code readiblity and organization.
+- [x] Create new method - on_new_mail() - for better code readiblity and organization.
 - [ ] Support for multiple accounts.
 - [ ] User can change applet icons from the settings dialog.
 - [ ] User can run a command or a script if he recieves a new mail.
