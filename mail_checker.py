@@ -9,6 +9,7 @@ import sys
 import os.path
 import encrypt
 import mail_settings_ui
+import settings_ui
 import threading
 
 
@@ -78,7 +79,7 @@ class MailChecker:
             self.initiate(None, 'initiate')
         else:
             os.system("touch '" + self.current_path + "credentials'")
-            self.show_settings()
+            self.show_mail_settings()
 
     # obj parameter used because signals pushed from save-button
     # return save-button object as first argument
@@ -250,13 +251,18 @@ class MailChecker:
         # Popup the menu
         self.menu.popup(None, None, None, None, event_button, event_time)
 
-    def show_settings(self, data=None):
+    def show_mail_settings(self, data=None):
         # Show Settings dialog
         dialog_builder = mail_settings_ui.DialogBuilder()
         # Construct signals
         self.settings_dialog_signals(dialog_builder)
         # Show Settings Dialog
         dialog_builder.show_dialog()
+
+    def show_settings(self, data=None):
+        dialog_builder = settings_ui.DialogBuilder()
+        dialog_builder.show_dialog()
+        dialog_builder.load_mails()
 
     def settings_dialog_signals(self, dialog_builder):
         # Get save Button from Settings dialog
