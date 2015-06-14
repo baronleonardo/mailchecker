@@ -74,7 +74,7 @@ class MailChecker:
         self.check_credentials()
 
     def check_credentials(self):
-        # Check if mail acoount file exists
+        # Check if mail account file exists
         f = os.path.exists(self.current_path + "credentials")
         if f is True:
             self.initiate(None, 'initiate')
@@ -86,7 +86,7 @@ class MailChecker:
     # return save-button object as first argument
     def initiate(self, obj=None, state=None):
         # reads credentials from a file called 'credentials'
-        # because it's never a good idea to have your crendentials
+        # because it's never a good idea to have your credentials
         # hardwired to the code.
         credentials = open(self.current_path + "credentials", 'r')
         str_credentials = credentials.read()
@@ -147,6 +147,9 @@ class MailChecker:
         print("state = " + state)
         # Run check mail in a thread
         check_mail = threading.Thread(target=self.thread_check_mail)
+        # Make the thread, daemon to solve the hang problem when we want
+        # to close the app and it is still checking
+        check_mail.setDaemon(True)
         check_mail.start()
 
         # this return used, to make sure that the timer will be in
