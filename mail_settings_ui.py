@@ -4,7 +4,7 @@ import os
 import encrypt
 
 current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
-glade_file = "settings_ui.glade"
+glade_file = "mail_settings_ui.glade"
 credentials_file = "credentials"
 
 # Signals
@@ -27,6 +27,7 @@ class Handler:
         email = builder.get_object('email_entry').get_text()
         password = builder.get_object('password_entry').get_text()
         imap = builder.get_object('imap_entry').get_text()
+        timer = builder.get_object('timer_spin').get_value()
 
         # Encrypt the password
         password = encrypt_password(password)
@@ -36,6 +37,7 @@ class Handler:
         credentials.write(email + "\n")
         credentials.write(password + "\n")
         credentials.write(imap + "\n")
+        credentials.write(timer + "\n")
 
         cancel_button = self.dialog_builder.get_builder().get_object(
             "cancel_button")

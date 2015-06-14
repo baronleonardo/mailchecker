@@ -8,7 +8,7 @@ import imaplib
 import sys
 import os.path
 import encrypt
-import settings_ui
+import mail_settings_ui
 import threading
 
 
@@ -22,9 +22,7 @@ class MailChecker:
     password = "PASSWORD"
     mailIMAP = "imap.mail.com"
     mailbox = "INBOX"
-
-    # timer for repeatly cheaking new mails
-    timeoutInSecs = 900
+    checker_timer = 10    # timer for repeatedly checking new mails In minutes
 
     # if you have a light-colored panel ..
     # change zeroMsgsIcons to "indicator-messages-dark.svg"
@@ -96,21 +94,22 @@ class MailChecker:
         self.mail = str_credentials.splitlines()[0]
         self.password = str_credentials.splitlines()[1]
         self.mailIMAP = str_credentials.splitlines()[2]
+        self.checker_timer = (int)(str_credentials.splitlines()[3])
 
         self.password = encrypt.dencrypt("decrypt", self.password)
 
         if state == 'initiate':
             self.timer('initiate')
 
-        elif state == 'reinitiate':
-            self.timer('reinitiate')
+        elif state == 're-initiate':
+            self.timer('re-initiate')
 
     def timer(self, state=None):
         self.timer_id = 0
 
         if state == "initiate":
             # timer for checking for new mails
-            GObject.timeout_add(self.timeoutInSecs * 1000, self.checkMail)
+            GObject.timeout_add(self.checker_timer * 60 * 1000, self.checkMail)
 
             # checkmail upon startup
             # "initial" is used to make sure that this timer will work
@@ -119,7 +118,7 @@ class MailChecker:
                 1 * 1000, self.checkMail, "initial")
             print("timer id=" + str(self.timer_id) + " added")
 
-        elif state == "reinitiate":
+        elif state == "re-initiate":
             GObject.source_remove(self.timer_id)
             print("timer id=" + str(self.timer_id) + " removed")
             # initiate a new timer
@@ -253,7 +252,7 @@ class MailChecker:
 
     def show_settings(self, data=None):
         # Show Settings dialog
-        dialog_builder = settings_ui.DialogBuilder()
+        dialog_builder = mail_settings_ui.DialogBuilder()
         # Construct signals
         self.settings_dialog_signals(dialog_builder)
         # Show Settings Dialog
@@ -263,7 +262,7 @@ class MailChecker:
         # Get save Button from Settings dialog
         save_button = dialog_builder.get_save_button()
 
-        save_button.connect('clicked', self.initiate, 'reinitiate')
+        save_button.connect('clicked', self.initiate, 're-initiate')
 
     def on_right_click(self, data, event_button, event_time):
         self.show_menu(event_button, event_time)

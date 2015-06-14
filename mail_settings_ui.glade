@@ -2,9 +2,14 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="upper">99</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkDialog" id="dialog1">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Settings</property>
+    <property name="title" translatable="yes">Mail Settings</property>
     <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
@@ -67,7 +72,7 @@
               <object class="GtkLabel" id="email_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">20</property>
+                <property name="xpad">10</property>
                 <property name="label" translatable="yes">E-mail</property>
               </object>
               <packing>
@@ -79,7 +84,7 @@
               <object class="GtkLabel" id="password_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">20</property>
+                <property name="xpad">10</property>
                 <property name="label" translatable="yes">Password</property>
               </object>
               <packing>
@@ -121,8 +126,7 @@
               <object class="GtkLabel" id="imap_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">ex. imap.gmail.com</property>
-                <property name="xpad">20</property>
+                <property name="xpad">10</property>
                 <property name="label" translatable="yes">IMAP</property>
               </object>
               <packing>
@@ -134,6 +138,7 @@
               <object class="GtkEntry" id="imap_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">ex. imap.gmail.com</property>
                 <property name="hexpand">True</property>
                 <property name="invisible_char">●</property>
                 <property name="text" translatable="yes">imap.gmail.com</property>
@@ -144,6 +149,38 @@
               <packing>
                 <property name="left_attach">1</property>
                 <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="timer_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="xpad">10</property>
+                <property name="label" translatable="yes">Timer</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="timer_spin">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="tooltip_text" translatable="yes">Timer in minutes</property>
+                <property name="max_length">2</property>
+                <property name="activates_default">True</property>
+                <property name="caps_lock_warning">False</property>
+                <property name="progress_pulse_step">1</property>
+                <property name="primary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
+                <property name="secondary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
+                <property name="placeholder_text" translatable="yes">Timer in seconds</property>
+                <property name="adjustment">adjustment1</property>
+                <property name="update_policy">if-valid</property>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">3</property>
               </packing>
             </child>
           </object>
