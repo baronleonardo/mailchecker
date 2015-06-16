@@ -8,6 +8,12 @@ gtk2
 python2     
 pygtk   
 PyGObject 3.10.2+
+pip2
+tendo
+
+Install:
+---------
+pip2 install tendo
 
 How To Use:
 ------------

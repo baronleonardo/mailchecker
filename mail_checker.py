@@ -1,10 +1,10 @@
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Notify
+from tendo.singleton import SingleInstance
 import os
 import sys
 import encrypt
-import threading
 import mail_checker_core
 import mail_settings_ui
 import settings_ui
@@ -31,6 +31,8 @@ class MailChecker:
     notification_icon = "mailIcon.png"
 
     def __init__(self):
+        # Start only one instance from the mail checker
+        SingleInstance()
         self.mail_settings_builder = mail_settings_ui.DialogBuilder()
 
         if self.check_settings_file_existence():
