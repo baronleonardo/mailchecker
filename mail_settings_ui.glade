@@ -14,7 +14,7 @@
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="gravity">north-east</property>
-    <signal name="close" handler="on_delete_window" swapped="no"/>
+    <signal name="close" handler="on_close_window" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -177,6 +177,7 @@
                 <property name="placeholder_text" translatable="yes">Timer in seconds</property>
                 <property name="adjustment">adjustment1</property>
                 <property name="update_policy">if-valid</property>
+                <property name="value">9.9999999997764828</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>

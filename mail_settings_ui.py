@@ -1,4 +1,5 @@
 from gi.repository import Gtk
+from gi.repository import GObject
 import sys
 import os
 import encrypt
@@ -17,36 +18,12 @@ class Handler:
     def __init__(self, dialog_builder):
         self.dialog_builder = dialog_builder
 
-    def on_delete_window(self, *args):
+    def on_close_window(self, *args):
         # Close the dialog
-        self.dialog_builder.get_dialog().destroy()
+        self.dialog_builder.get_dialog().hide()
 
     def on_save(self, *args):
-        builder = self.dialog_builder.get_builder()
-        # Get Data from text entries from the settings dialog
-        email = builder.get_object('email_entry').get_text()
-        password = builder.get_object('password_entry').get_text()
-        imap = builder.get_object('imap_entry').get_text()
-        timer = builder.get_object('timer_spin').get_value()
-
-        # Encrypt the password
-        password = encrypt_password(password)
-
-        # Save Email Data
-        credentials = open(current_path + credentials_file, 'w')
-        credentials.write(email + "\n")
-        credentials.write(password + "\n")
-        credentials.write(imap + "\n")
-        credentials.write(timer + "\n")
-
-        cancel_button = self.dialog_builder.get_builder().get_object(
-            "cancel_button")
-        cancel_button.set_label("Close")
-
-        # Close the dialog
-        # self.dialog.get_dialog().destroy()
-        # save = dialog.get_object('save_button')
-
+        print("Save new mail data")
 
 def encrypt_password(password):
     """"Encrypt Password"""
@@ -80,3 +57,12 @@ class DialogBuilder:
     def show_dialog(self):
         # Show the dialog window
         self.dialog.show()
+
+    def change_cancel_button_to_close(self):
+        cancel_button = self.builder.get_object("cancel_button")
+        cancel_button.set_label("Close")
+
+# if __name__ == "__main__":
+#     dialog = DialogBuilder()
+#     dialog.show_dialog()
+#     Gtk.main()

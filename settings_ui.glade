@@ -8,20 +8,17 @@
       <column type="gchararray"/>
     </columns>
   </object>
-  <object class="GtkImage" id="image1">
+  <object class="GtkImage" id="error_tray_icon">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">indicator-messages.svg</property>
   </object>
-  <object class="GtkImage" id="image2">
+  <object class="GtkImage" id="new_tray_icon">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">indicator-messages-new.svg</property>
   </object>
-  <object class="GtkImage" id="image3">
+  <object class="GtkImage" id="normal_tray_icon">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">indicator-messages-error.svg</property>
   </object>
   <object class="GtkDialog" id="dialog1">
     <property name="can_focus">False</property>
@@ -30,7 +27,7 @@
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
     <property name="gravity">north-east</property>
-    <signal name="close" handler="on_delete_window" swapped="no"/>
+    <signal name="close" handler="on_close_window" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="can_focus">False</property>
@@ -47,13 +44,13 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="cancel_button">
+              <object class="GtkButton" id="close_button">
                 <property name="label" translatable="yes">Close</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_delete_window" swapped="no"/>
+                <signal name="clicked" handler="on_close_window" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -243,7 +240,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry1">
+                          <object class="GtkEntry" id="action_on_left_click_tray_icon">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -277,7 +274,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="entry2">
+                          <object class="GtkEntry" id="action_on_new_mail">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -341,7 +338,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="image">image1</property>
+                        <property name="image">normal_tray_icon</property>
                         <property name="image_position">top</property>
                         <property name="always_show_image">True</property>
                       </object>
@@ -357,7 +354,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="image">image2</property>
+                        <property name="image">new_tray_icon</property>
                         <property name="image_position">top</property>
                         <property name="always_show_image">True</property>
                       </object>
@@ -373,7 +370,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="image">image3</property>
+                        <property name="image">error_tray_icon</property>
                         <property name="image_position">top</property>
                         <property name="always_show_image">True</property>
                       </object>
