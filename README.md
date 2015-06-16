@@ -6,7 +6,7 @@ Requirements:
 --------------
 gtk2  
 python2     
-pygtk
+pygtk   
 PyGObject 3.10.2+
 
 How To Use:
