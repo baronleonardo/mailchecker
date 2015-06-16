@@ -252,6 +252,11 @@ class MailChecker:
 
         # Load mail data from credentials file
         self.load_mail_account()
+
+        # load settings if there this is the first execute time
+        if self.settings_data is None:
+            self.load_settings()
+
         # Construct the mail checker
         self.construct()
         # Check for new emails
