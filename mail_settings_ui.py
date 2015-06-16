@@ -20,7 +20,7 @@ class Handler:
 
     def on_close_window(self, *args):
         # Close the dialog
-        self.dialog_builder.get_dialog().hide()
+        self.dialog_builder.get_dialog().destroy()
 
     def on_save(self, *args):
         print("Save new mail data")

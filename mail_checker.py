@@ -33,7 +33,6 @@ class MailChecker:
     def __init__(self):
         # Start only one instance from the mail checker
         SingleInstance()
-        self.mail_settings_builder = mail_settings_ui.DialogBuilder()
 
         if self.check_settings_file_existence():
             self.load_settings()
@@ -55,7 +54,6 @@ class MailChecker:
         self.tray_icon = self.create_tray_icon()
 
         self.mail_checker_core = mail_checker_core.Core(self.mail_account_data, self.settings_data, self.tray_icon)
-        self.settings_builder = settings_ui.DialogBuilder()
 
         self.right_clicked_menu = self.create_right_clicked_menu()
         self.initialize_notification_system()
@@ -191,12 +189,14 @@ class MailChecker:
             os.system(self.settings_data["action_on_left_click_tray_icon"]+" 2> /dev/null &")
 
     def show_mail_settings(self, *args):
+        self.mail_settings_builder = mail_settings_ui.DialogBuilder()
         # Construct additional signals
         self.mail_settings_dialog_additional_signals()
         # Show Mail Settings Dialog
         self.mail_settings_builder.show_dialog()
 
     def show_settings(self, *args):
+        self.settings_builder = settings_ui.DialogBuilder()
         # Construct additional signals
         self.settings_dialog_additional_signals()
         # Show Settings Dialog
@@ -282,9 +282,8 @@ class MailChecker:
         settings.write(action_on_left_click_tray_icon + "\n")
         settings.write(action_on_new_mail + "\n")
 
-        # Destroy and re-create
+        # Destroy
         self.settings_builder.get_dialog().destroy()
-        self.settings_builder = settings_ui.DialogBuilder()
 
     def get_list_of_mails(self):
         mail_list = []
