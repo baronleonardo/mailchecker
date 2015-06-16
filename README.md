@@ -33,8 +33,8 @@ TO-DO list:
 - [x] Create new method - on_new_mail() - for better code readiblity and organization.
 - [ ] Support for multiple accounts.
 - [ ] User can change applet icons from the settings dialog.
-- [ ] User can run a command or a script if he recieves a new mail.
-- [ ] User can run a command or a script if he left-click on the tray icon.
-- [ ] User can set the check-mail timer
+- [x] User can run a command or a script if he recieves a new mail.
+- [x] User can run a command or a script if he left-click on the tray icon.
+- [x] User can set the check-mail timer
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [ ] Edit existing mail account.
