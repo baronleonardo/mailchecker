@@ -46,7 +46,7 @@
                 <property name="can_focus">True</property>
                 <property name="has_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_delete_window" swapped="no"/>
+                <signal name="clicked" handler="on_close_window" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
