@@ -268,10 +268,10 @@ class MailChecker:
         action_on_new_mail = \
             self.settings_builder.get_builder().get_object('action_on_new_mail').get_text()
 
-        settings = open(self.current_path + self.settings_file, 'w')
-
         with open(self.current_path + self.settings_file, 'w'):
             pass
+
+        settings = open(self.current_path + self.settings_file, 'w')
 
         # TODO: Save icon path too
 
@@ -281,6 +281,12 @@ class MailChecker:
         settings.write(self.settings_data["error_tray_icon"] + "\n")
         settings.write(action_on_left_click_tray_icon + "\n")
         settings.write(action_on_new_mail + "\n")
+
+        settings.flush()
+        settings.close()
+
+        # load settings data
+        self.load_settings()
 
         # Destroy
         self.settings_builder.get_dialog().destroy()
@@ -319,3 +325,5 @@ class SignalSender(GObject.GObject):
 if __name__ == '__main__':
     mail_checker = MailChecker()
     mail_checker.run()
+        #     self.settings_data["new_messages_tray_icon"],
+        #     self.settings_data["error_tray_icon"],
