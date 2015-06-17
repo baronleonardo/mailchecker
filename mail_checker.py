@@ -257,6 +257,9 @@ class MailChecker:
         if self.settings_data is None:
             self.load_settings()
 
+        # Now it is suppose that mail data is true
+        self.mail_checker_core.is_invalid_mail_account = False
+
         # Construct the mail checker
         self.construct()
         # Check for new emails

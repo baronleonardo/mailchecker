@@ -28,6 +28,8 @@ class Core:
 
     current_timer_id = 0
 
+    is_invalid_mail_account = False
+
     from_milliseconds_to_minutes = 60 * 1000
 
     def __init__(self, mail_account_data, settings_data, tray_icon):
@@ -153,14 +155,17 @@ class Core:
             "You have " + str(self.unread_msgs_num) + " new messages.")
 
     def invalid_mail_data(self):
-        # Change tray icon to red to indicate an error
-        self.tray_icon.set_from_file(
-            self.current_path + self.settings_data["error_tray_icon"])
-        # Send notification - Invalid Mail account data
-        icon = Gtk.STOCK_DIALOG_ERROR
-        notify = Notify.Notification.new(
-            "Error!", "Invalid Mail account data", icon)
-        notify.show()
+        if self.is_invalid_mail_account is not True:
+            # Change tray icon to red to indicate an error
+            self.tray_icon.set_from_file(
+                self.current_path + self.settings_data["error_tray_icon"])
+            # Send notification - Invalid Mail account data
+            icon = Gtk.STOCK_DIALOG_ERROR
+            notify = Notify.Notification.new(
+                "Error!", "Invalid Mail account data", icon)
+            notify.show()
+
+        self.is_invalid_mail_account = True
 
 # if __name__ == '__main__':
 #     mail_checker = MailChecker()
