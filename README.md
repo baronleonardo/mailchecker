@@ -13,14 +13,14 @@ tendo
 
 Install:
 ---------
-pip2 install tendo
+```pip2 install tendo```
 
 How To Use:
 ------------
 1. Simply open a terminal and run `python2 mail_checker.py`
 2. In the settings dialog place you email and your password.
 
-Example for what you might type into the settings dialog:
+Example for what you might type into the mail settings dialog:
 ---------------------------------------------------
 ```
 example@mail.com  
@@ -44,3 +44,4 @@ TO-DO list:
 - [x] User can set the check-mail timer
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [ ] Edit existing mail account.
+- [ ] handle the situation of "No internet connection"
