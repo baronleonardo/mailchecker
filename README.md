@@ -43,5 +43,5 @@ TO-DO list:
 - [x] User can run a command or a script if he left-click on the tray icon.
 - [x] User can set the check-mail timer
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
-- [ ] Edit existing mail account.
+- [x] Edit existing mail account.
 - [ ] handle the situation of "No internet connection"
