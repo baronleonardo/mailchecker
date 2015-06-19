@@ -41,6 +41,9 @@ class Handler:
         # TODO: confirm first before delete the credentials file
         os.remove(current_path + credentials_file)
 
+    def on_click_edit_button(self, *args):
+        print("edit button clicked")
+
     @staticmethod
     def on_click_edit_button():
         print("Under Construction")
@@ -91,6 +94,9 @@ class DialogBuilder:
 
     def get_close_button(self):
         return self.builder.get_object("close_button")
+
+    def get_edit_button(self):
+        return self.builder.get_object("edit_email_button")
 
     def get_mail_list(self):
         return self.mail_list

@@ -117,7 +117,7 @@ class MailChecker:
         """Show mail settings dialog"""
         self.show_mail_settings()
 
-    def load_mail_account(self):
+    def load_mail_account(self, type_of_load=None):
         credentials = open(self.current_path + "credentials", 'r')
         str_credentials = credentials.read()
 
@@ -130,11 +130,20 @@ class MailChecker:
 
         password = encrypt.dencrypt("decrypt", password)
 
-        self.mail_account_data = \
-            dict({"email": email, "password": password,
-                  "mailIMAP": mailIMAP, "mailbox": "INBOX", "checker_timer_in_minutes": checker_timer})
+        if type_of_load == "dialog":
+            # Load data to the mail data settings dialog
+            self.mail_settings_builder.load_mail_data(email, password, mailIMAP, checker_timer)
+
+        else:
+            self.mail_account_data = \
+                dict({"email": email, "password": password,
+                    "mailIMAP": mailIMAP, "mailbox": "INBOX", "checker_timer_in_minutes": checker_timer})
 
         credentials.close()
+
+    def on_edit_current_mail_data(self, button=None, type_of_load=None):
+        self.show_mail_settings()
+        self.load_mail_account(type_of_load)
 
     def create_tray_icon(self):
         """Create tray icon"""
@@ -222,6 +231,9 @@ class MailChecker:
         close_button = self.settings_builder.get_close_button()
         close_button.connect('clicked', self.save_new_settings)
 
+        edit_button = self.settings_builder.get_edit_button()
+        edit_button.connect('clicked', self.on_edit_current_mail_data, "dialog")
+
     @staticmethod
     def encrypt_password(password):
         """"Encrypt Password"""
@@ -260,8 +272,8 @@ class MailChecker:
         # Now it is suppose that mail data is true
         self.mail_checker_core.is_invalid_mail_account = False
 
-        # Construct the mail checker
-        self.construct()
+        # re-Construct the mail checker core
+        self.mail_checker_core = mail_checker_core.Core(self.mail_account_data, self.settings_data, self.tray_icon)
         # Check for new emails
         self.mail_checker_core.timer(None, "initiate")
 
@@ -315,18 +327,6 @@ class MailChecker:
     def close_app(*args):
         Gtk.main_quit()
 
-
-class SignalSender(GObject.GObject):
-    """This a signal sender"""
-
-    def __init__(self):
-        GObject.GObject.__init__(self)
-        GObject.type_register(SignalSender)
-        GObject.signal_new("on_click_save_button", SignalSender, GObject.SIGNAL_RUN_FIRST,
-                   GObject.TYPE_NONE, ())
-
 if __name__ == '__main__':
     mail_checker = MailChecker()
     mail_checker.run()
-        #     self.settings_data["new_messages_tray_icon"],
-        #     self.settings_data["error_tray_icon"],

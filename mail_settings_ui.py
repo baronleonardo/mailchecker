@@ -58,6 +58,14 @@ class DialogBuilder:
         # Show the dialog window
         self.dialog.show()
 
+    def load_mail_data(self, email, password, mailIMAP, checker_timer_in_minutes):
+        """set Data to text entries in the mail settings dialog"""
+        email = self.builder.get_object('email_entry').set_text(email)
+        password = self.builder.get_object('password_entry').set_text(password)
+        imap = self.builder.get_object('imap_entry').set_text(mailIMAP)
+        timer = self.builder.get_object('timer_spin').set_value(checker_timer_in_minutes)
+
+
     def change_cancel_button_to_close(self):
         cancel_button = self.builder.get_object("cancel_button")
         cancel_button.set_label("Close")
