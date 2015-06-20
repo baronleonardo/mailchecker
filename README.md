@@ -17,7 +17,7 @@ Install:
 
 How To Use:
 ------------
-1. Simply open a terminal and run `python2 mail_checker.py`
+1. Simply run "Mail Checker"
 2. In the settings dialog place you email and your password.
 
 Example for what you might type into the mail settings dialog:
