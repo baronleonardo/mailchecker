@@ -44,4 +44,4 @@ TO-DO list:
 - [x] User can set the check-mail timer
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [x] Edit existing mail account.
-- [ ] handle the situation of "No internet connection"
+- [x] Handle the situation of "No internet connection"

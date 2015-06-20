@@ -8,6 +8,7 @@ import imaplib
 import sys
 import os.path
 import threading
+import urllib2
 
 
 class Core:
@@ -29,6 +30,7 @@ class Core:
     current_timer_id = 0
 
     is_invalid_mail_account = False
+    is_there_internet_connection = True
 
     from_milliseconds_to_minutes = 60 * 1000
 
@@ -126,8 +128,12 @@ class Core:
             connection.shutdown()
 
         except:
-            self.invalid_mail_data()
-            print("Invalid mail account data")
+            if self.check_internet_availability() is False:
+                self.on_no_internet_connection()
+                print("No internet connection")
+            else:
+                self.invalid_mail_data()
+                print("Invalid mail account data")
 
     def on_new_mail(self):
 
@@ -154,8 +160,25 @@ class Core:
         self.tray_icon.set_tooltip_text(
             "You have " + str(self.unread_msgs_num) + " new messages.")
 
+    @staticmethod
+    def check_internet_availability():
+        try:
+            response = urllib2.urlopen('http://google.com', timeout=1)
+            return True
+        except urllib2.URLError as err:
+            pass
+        return False
+
+    def on_no_internet_connection(self):
+        if self.is_there_internet_connection is True:
+            # Change tray icon to red to indicate an error
+            self.tray_icon.set_from_file(
+                self.current_path + self.settings_data["error_tray_icon"])
+
+        self.is_there_internet_connection = False
+
     def invalid_mail_data(self):
-        if self.is_invalid_mail_account is not True:
+        if self.is_invalid_mail_account is False:
             if self.mail_account_data is None:
                 print("data is None")
             # Change tray icon to red to indicate an error

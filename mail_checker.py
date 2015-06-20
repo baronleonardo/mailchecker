@@ -270,7 +270,9 @@ class MailChecker:
             self.load_settings()
 
         # Now it is suppose that mail data is true
+        # and there is an internet connection
         self.mail_checker_core.is_invalid_mail_account = False
+        self.mail_checker_core.is_there_internet_connection = True
 
         # re-Construct the mail checker core
         self.mail_checker_core = mail_checker_core.Core(self.mail_account_data, self.settings_data, self.tray_icon)
