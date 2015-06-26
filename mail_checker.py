@@ -34,7 +34,7 @@ class MailChecker:
         # Start only one instance from the mail checker
         SingleInstance()
 
-        if self.check_settings_file_existence():
+        if self.settings_file_exists():
             self.load_settings()
         else:
             self.on_settings_file_not_found()
@@ -65,7 +65,7 @@ class MailChecker:
         if not Notify.init("Basics"):
             sys.exit(1)
 
-    def check_settings_file_existence(self):
+    def settings_file_exists(self):
         # Check if settings file exists
         f = os.path.exists(self.current_path + self.settings_file)
         if f is False:
