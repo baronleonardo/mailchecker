@@ -39,9 +39,8 @@ class MailChecker:
         else:
             self.on_settings_file_not_found()
 
-        if self.check_credentials_file_existence():
+        if self.credentials_file_exists():
             self.load_mail_account()
-
         else:
             self.on_credentials_file_not_found()
 
@@ -89,11 +88,11 @@ class MailChecker:
         settings = open(self.current_path + self.settings_file, 'r')
         str_settings = settings.read()
 
-        zero_messages_tray_icon = str_settings.splitlines()[0]
-        new_messages_tray_icon = str_settings.splitlines()[1]
-        error_tray_icon = str_settings.splitlines()[2]
+        zero_messages_tray_icon   = str_settings.splitlines()[0]
+        new_messages_tray_icon    = str_settings.splitlines()[1]
+        error_tray_icon           = str_settings.splitlines()[2]
         action_on_left_click_tray = str_settings.splitlines()[3]
-        action_on_new_mail = str_settings.splitlines()[4]
+        action_on_new_mail        = str_settings.splitlines()[4]
 
         self.settings_data = dict({"zero_messages_tray_icon": zero_messages_tray_icon,
                                    "new_messages_tray_icon": new_messages_tray_icon,
@@ -104,7 +103,7 @@ class MailChecker:
 
         settings.close()
 
-    def check_credentials_file_existence(self):
+    def credentials_file_exists(self):
         # Check if mail account file exists
         f = os.path.exists(self.current_path + self.credentials_file)
         if f is False:
