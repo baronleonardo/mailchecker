@@ -45,3 +45,4 @@ TO-DO list:
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [x] Edit existing mail account.
 - [x] Handle the situation of "No internet connection"
+- [ ] Save mail aacounts on a database instead of credentiatls file
