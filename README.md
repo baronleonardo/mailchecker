@@ -37,7 +37,7 @@ TO-DO list:
 - [x] Restart timer on new mail account.
 - [x] Change tray icon color and send a notification if mail account data is invaild or wrong
 - [x] Create new method - on_new_mail() - for better code readiblity and organization.
-- [ ] Support for multiple accounts.
+- [x] Support for multiple accounts.
 - [ ] User can change applet icons from the settings dialog.
 - [x] User can run a command or a script if he recieves a new mail.
 - [x] User can run a command or a script if he left-click on the tray icon.
@@ -45,3 +45,4 @@ TO-DO list:
 - [ ] Save user data in default configuration folder (in the ~/.config/ or something). 
 - [x] Edit existing mail account.
 - [x] Handle the situation of "No internet connection"
+- [x] Save mail aacounts on a database instead of credentiatls file
