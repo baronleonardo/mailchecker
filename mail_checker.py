@@ -338,7 +338,10 @@ class MailChecker:
             self.database.insert(mail_data)
             # Add the new mail to the TreeView list
             list_of_mails = self.get_list_of_mails()
-            self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
+            if list_of_mails.__len__() == 0:
+                self.settings_builder.update_mail_list(mail_data.get("email"))
+            else:
+                self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
         elif type_of_update == "update":
             # get row_id
             selected_mail, itr = self.settings_builder.get_selected_mail()
