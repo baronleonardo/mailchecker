@@ -1,5 +1,5 @@
 from gi.repository import Gtk
-from gi.repository import GObject
+import webbrowser
 import sys
 import os
 import encrypt
@@ -24,6 +24,11 @@ class Handler:
 
     def on_save(self, *args):
         print("Save new mail data")
+
+    def open_link(self, *args):
+        url = "https://support.google.com/mail/answer/78754"
+        webbrowser.open(url, new=0, autoraise=True)
+
 
 def encrypt_password(password):
     """"Encrypt Password"""
@@ -58,13 +63,12 @@ class DialogBuilder:
         # Show the dialog window
         self.dialog.show()
 
-    def load_mail_data(self, email, password, mailIMAP, checker_timer_in_minutes):
+    def load_mail_data(self, mail_data):
         """set Data to text entries in the mail settings dialog"""
-        email = self.builder.get_object('email_entry').set_text(email)
-        password = self.builder.get_object('password_entry').set_text(password)
-        imap = self.builder.get_object('imap_entry').set_text(mailIMAP)
-        timer = self.builder.get_object('timer_spin').set_value(checker_timer_in_minutes)
-
+        email = self.builder.get_object('email_entry').set_text(mail_data["email"])
+        password = self.builder.get_object('password_entry').set_text(mail_data["password"])
+        imap = self.builder.get_object('imap_entry').set_text(mail_data["mailIMAP"])
+        timer = self.builder.get_object('timer_spin').set_value(mail_data["checker_timer_in_minutes"])
 
     def change_cancel_button_to_close(self):
         cancel_button = self.builder.get_object("cancel_button")

@@ -18,46 +18,29 @@ class Handler:
 
     @staticmethod
     def on_close_window(*args):
-        # Close the dialog
         print("the settings dialog closed")
-        # self.dialog_builder.get_dialog().hide()
 
     @staticmethod
     def on_click_add_button(*args):
-        # Show Settings dialog
-        print("Under Construction")
-
-    def on_click_delete_button(self, *args):
-        # get Tree View contains list of mails
-        tree_view = self.dialog_builder.get_tree_view()
-        # get selected mail
-        selection = tree_view.get_selection()
-        selected_mail, itr = selection.get_selected()
-        # remove selected mail
-        selected_mail.remove(itr)
-
-        # delete mail account from credentials file
-        # This a temporary workaround as it is one mail data
-        # TODO: confirm first before delete the credentials file
-        os.remove(current_path + credentials_file)
-
-    def on_click_edit_button(self, *args):
-        print("edit button clicked")
+        print("Add new mail data")
 
     @staticmethod
-    def on_click_edit_button():
-        print("Under Construction")
-        # get Tree View contains list of mails
-        # tree_view = self.dialog_builder.get_tree_view()
-        # get selected mail
-        # selection = tree_view.get_selection()
-        # selected_mail, itr = selection.get_selected()
+    def on_click_delete_button(*args):
+        # TODO: confirm first before delete the credentials file
+        print("remove an mail account")
+
+    @staticmethod
+    def on_click_edit_button(*args):
+        print("edit button clicked")
 
 
 class DialogBuilder:
     builder = Gtk.Builder()
     dialog = None
     mail_list = None
+
+    is_edit_button_clicked = False
+    is_add_button_clicked = False
 
     def __init__(self):
         # Load the Glade file
@@ -66,11 +49,20 @@ class DialogBuilder:
         self.builder.connect_signals(Handler(self))
         # Get the dialog window
         self.dialog = self.builder.get_object('dialog1')
-        # set mail list
-        self.mail_list = self.builder.get_object('email_list')
 
     def load_mails(self, mails):
-        self.mail_list.append(mails)
+        self.mail_list = mails
+        mail_list = self.get_mail_list_store()
+
+        # Load email to the tree view
+        for iii in range(0, mails.__len__()):
+            mail_list.append([mails[iii]])
+
+    def update_mail_list(self, new_mail):
+        self.mail_list.append(new_mail)
+        mail_list = self.get_mail_list_store()
+
+        mail_list.append([new_mail])
 
     def load_icons(self, zero_messages_tray_icon, new_messages_tray_icon, error_tray_icon):
         normal = self.builder.get_object("normal_tray_icon")
@@ -89,17 +81,32 @@ class DialogBuilder:
         on_new_mail_label = self.builder.get_object("action_on_new_mail")
         on_new_mail_label.set_text(action_on_new_mail)
 
+    def get_selected_mail(self):
+        # get Tree View contains list of mails
+        tree_view = self.get_tree_view()
+        # get selected mail
+        selection = tree_view.get_selection()
+        selected_mail, itr = selection.get_selected()
+
+        return selected_mail, itr
+
     def get_tree_view(self):
         return self.builder.get_object("treeview1")
 
     def get_close_button(self):
         return self.builder.get_object("close_button")
 
+    def get_add_button(self):
+        return self.builder.get_object("add_email_button")
+
     def get_edit_button(self):
         return self.builder.get_object("edit_email_button")
 
-    def get_mail_list(self):
-        return self.mail_list
+    def get_remove_button(self):
+        return self.builder.get_object("remove_email_button")
+
+    def get_mail_list_store(self):
+        return self.builder.get_object("email_list")
 
     def get_builder(self):
         return self.builder

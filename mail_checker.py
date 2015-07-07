@@ -1,58 +1,65 @@
 from gi.repository import Gtk
-from gi.repository import GObject
 from gi.repository import Notify
-from tendo.singleton import SingleInstance
 import os
 import sys
 import encrypt
+import db_controller
 import mail_checker_core
 import mail_settings_ui
 import settings_ui
 
 
 class MailChecker:
-
     # transforms relative path into absolute path
     # because libnotify needs absolute paths for some reason
     current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
-    credentials_file = "credentials"
     settings_file = "settings"
     default_settings_file = "settings_defaults"
 
+    database = None
+
+    list_of_mails = []
+    list_of_mails_cores = []
+
     tray_icon = None
+    tray_icon_tooltip = None
     right_clicked_menu = None
     settings_builder = None
     mail_settings_builder = None
-    mail_checker_core = None
 
-    mail_account_data = None
+    # mail_account_data = None
     settings_data = None
 
     notification_icon = "mailIcon.png"
 
     def __init__(self):
-        # Start only one instance from the mail checker
-        SingleInstance()
+
+        self.database = db_controller.DatabaseController(self.current_path)
 
         if self.settings_file_exists():
             self.load_settings()
         else:
             self.on_settings_file_not_found()
 
-        if self.credentials_file_exists():
-            self.load_mail_account()
+        if self.db_exists():
+            self.load_mail_accounts()
         else:
-            self.on_credentials_file_not_found()
+            self.database.on_db_not_found()
 
-        if (self.mail_account_data and self.settings_data) is not None:
+        if (self.list_of_mails_cores and self.settings_data) is not None:
             self.construct()
+
             # Initiate the timer
-            self.mail_checker_core.timer(None, "initiate")
+            for mail_core in self.list_of_mails_cores:
+                mail_core.timer(None, "initiate")
 
     def construct(self):
         self.tray_icon = self.create_tray_icon()
+        self.tray_icon_tooltip = self.create_tray_icon_tooltip()
 
-        self.mail_checker_core = mail_checker_core.Core(self.mail_account_data, self.settings_data, self.tray_icon)
+        for iii in range(0, self.list_of_mails.__len__()):
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data, self.tray_icon)
+            self.list_of_mails_cores.append(core)
 
         self.right_clicked_menu = self.create_right_clicked_menu()
         self.initialize_notification_system()
@@ -94,15 +101,18 @@ class MailChecker:
         action_on_left_click_tray = str_settings.splitlines()[3]
         action_on_new_mail        = str_settings.splitlines()[4]
 
-        self.settings_data = dict({"zero_messages_tray_icon": zero_messages_tray_icon,
-                                   "new_messages_tray_icon": new_messages_tray_icon,
-                                   "error_tray_icon": error_tray_icon,
-                                   "action_on_left_click_tray_icon": action_on_left_click_tray,
-                                   "action_on_new_mail": action_on_new_mail,
-                                   "notification_icon": self.current_path + self.notification_icon})
+        self.settings_data = {
+            "zero_messages_tray_icon": zero_messages_tray_icon,
+            "new_messages_tray_icon": new_messages_tray_icon,
+            "error_tray_icon": error_tray_icon,
+            "action_on_left_click_tray_icon": action_on_left_click_tray,
+            "action_on_new_mail": action_on_new_mail,
+            "notification_icon": self.current_path + self.notification_icon
+        }
 
         settings.close()
 
+<<<<<<< HEAD
     def credentials_file_exists(self):
         # Check if mail account file exists
         f = os.path.exists(self.current_path + self.credentials_file)
@@ -128,25 +138,63 @@ class MailChecker:
         checker_timer = int(str_credentials.splitlines()[3])
 
         password = encrypt.dencrypt("decrypt", password)
+=======
+    def load_mail_accounts(self, type_of_load=None, mail_data=None):
+>>>>>>> a1a1b33a4c4062f6032922ca86494a486634909a
 
         if type_of_load == "dialog":
-            # Load data to the mail data settings dialog
-            self.mail_settings_builder.load_mail_data(email, password, mailIMAP, checker_timer)
+            self.mail_settings_builder.load_mail_data(mail_data)
+        elif type_of_load is None:
+            # Load mail accounts from the database
+            self.load_mail_accounts_from_db()
 
-        else:
-            self.mail_account_data = \
-                dict({"email": email, "password": password,
-                    "mailIMAP": mailIMAP, "mailbox": "INBOX", "checker_timer_in_minutes": checker_timer})
+    def load_mail_accounts_from_db(self):
+        # Get the list of mail accounts
+        list_of_mails = self.database.load()
 
-        credentials.close()
+        # Create a dictionary for this list
+        for mail_account in list_of_mails:
+            mail_account_data = {
+                "email": mail_account[0],
+                "password": encrypt.dencrypt("decrypt", mail_account[1]),
+                "mailIMAP": mail_account[2],
+                "mailbox": mail_account[3],
+                "checker_timer_in_minutes": mail_account[4],
+            }
+
+            self.list_of_mails.append(mail_account_data)
 
     def on_edit_current_mail_data(self, button=None, type_of_load=None):
-        self.show_mail_settings()
-        self.load_mail_account(type_of_load)
+        selected_mail, itr = self.settings_builder.get_selected_mail()
+
+        mail_data = None
+        for mail in self.list_of_mails:
+            if mail["email"] == selected_mail.get_value(itr, 0):
+                mail_data = mail
+        self.show_mail_settings("update")
+        self.load_mail_accounts(type_of_load, mail_data)
+
+    def on_remove_current_mail_data(self, *args):
+        selected_mail, itr = self.settings_builder.get_selected_mail()
+        row_id = selected_mail.get_path(itr)[0]
+
+        # Remove from the TreeView
+        selected_mail.remove(itr)
+        # Remove mail core from mail cores
+        self.list_of_mails_cores.__delitem__(row_id)
+        # Remove mail from mails list
+        self.list_of_mails.__delitem__(row_id)
+        # Remove from the database
+        self.database.remove(row_id + 1)
+
+    def on_add_new_mail_data(self, *args):
+        self.show_mail_settings("new")
 
     def create_tray_icon(self):
         """Create tray icon"""
         tray_icon = Gtk.StatusIcon()
+        # has tooltip
+        tray_icon.set_has_tooltip(True)
         # add a tray icon
         tray_icon.set_from_file(
             self.current_path + self.settings_data["zero_messages_tray_icon"])
@@ -156,9 +204,14 @@ class MailChecker:
         # left click signal and slot
         tray_icon.connect('activate', self.on_left_click_tray_icon)
 
-        # TODO: create action when the tray-icon clicked
-
         return tray_icon
+
+    def create_tray_icon_tooltip(self):
+        tooltip = Gtk.Tooltip()
+        # self.set_tooltip(None, None, None, None, None, "checking")
+        # update unread msgs if mouse hover on the tray icon
+        self.tray_icon.connect("query-tooltip", self.set_tooltip)
+        return tooltip
 
     def create_right_clicked_menu(self):
         """Create right clicked menu"""
@@ -176,7 +229,8 @@ class MailChecker:
         menu.append(close_item)
 
         # add callbacks
-        check_mail_item.connect_object("activate", self.mail_checker_core.check_new_mails, "Check Mail")
+        for mail_core in self.list_of_mails_cores:
+            check_mail_item.connect_object("activate", mail_core.check_new_mails, "Check Mail")
         settings_item.connect_object("activate", self.show_settings, "Settings")
         close_item.connect_object("activate", self.close_app, "Close")
 
@@ -192,14 +246,49 @@ class MailChecker:
 
     def on_left_click_tray_icon(self, *args):
         print("left click")
-        if self.settings_data["action_on_left_click_tray_icon"] != "":
+        if self.settings_data["action_on_new_mail"] != "":
             # run the command in background and direct the errors to /dev/null black hole
-            os.system(self.settings_data["action_on_left_click_tray_icon"]+" 2> /dev/null &")
+            os.system(self.settings_data["action_on_left_click_tray_icon"] + " 2> /dev/null &")
 
-    def show_mail_settings(self, *args):
+    def on_new_emails(self):
+        if self.settings_data["action_on_left_click_tray_icon"] != "":
+            # TODO: on new mails
+            pass
+
+    def set_tooltip(self, widget=None, x=0, y=0, keyboard_mode=None,
+                    tooltip=None):
+
+        message = ""
+        unread_msgs = 0
+        has_new_msgs = True
+
+        for core in self.list_of_mails_cores:
+            if core.is_checking_for_new_mails:
+                message = "Checking ..."
+                has_new_msgs = False
+                break
+            elif core.is_there_internet_connection is False:
+                message = "No Internet connection!"
+                has_new_msgs = False
+                break
+            elif core.is_invalid_mail_account:
+                message = "Yoy have invalid mail Account(s)"
+                has_new_msgs = False
+                break
+            else:
+                # TODO: need to be optimized
+                unread_msgs += core.unread_msgs_num
+
+        # TODO: need better check list
+        if has_new_msgs is True:
+            message = "You have " + str(unread_msgs) + " new message(s)."
+
+        self.tray_icon.set_tooltip_text(message)
+
+    def show_mail_settings(self, type_of_update):
         self.mail_settings_builder = mail_settings_ui.DialogBuilder()
         # Construct additional signals
-        self.mail_settings_dialog_additional_signals()
+        self.mail_settings_dialog_additional_signals(type_of_update)
         # Show Mail Settings Dialog
         self.mail_settings_builder.show_dialog()
 
@@ -217,14 +306,19 @@ class MailChecker:
         self.settings_builder.load_actions(self.settings_data["action_on_left_click_tray_icon"],
                                            self.settings_data["action_on_new_mail"])
 
-    def mail_settings_dialog_additional_signals(self):
+    def mail_settings_dialog_additional_signals(self, type_of_update):
         # Get save Button from Settings dialog
         save_button = self.mail_settings_builder.get_save_button()
 
         # Reinitialize the timer if save-button is clicked
-        if (self.mail_account_data and self.settings_data) is not None:
-            save_button.connect('clicked', self.mail_checker_core.timer, 're-initiate')
-        save_button.connect('clicked', self.save_new_mail_data)
+        if (self.list_of_mails_cores and self.settings_data) is not None:
+            for mail_core in self.list_of_mails_cores:
+                save_button.connect('clicked', mail_core.timer, 're-initiate')
+
+        if type_of_update == "new":
+            save_button.connect('clicked', self.save_new_mail_data, "new")
+        elif type_of_update == "update":
+            save_button.connect('clicked', self.save_new_mail_data, "update")
 
     def settings_dialog_additional_signals(self):
         close_button = self.settings_builder.get_close_button()
@@ -233,13 +327,20 @@ class MailChecker:
         edit_button = self.settings_builder.get_edit_button()
         edit_button.connect('clicked', self.on_edit_current_mail_data, "dialog")
 
+        remove_button = self.settings_builder.get_remove_button()
+        remove_button.connect('clicked', self.on_remove_current_mail_data)
+
+        add_button = self.settings_builder.get_add_button()
+        add_button.connect('clicked', self.on_add_new_mail_data)
+
     @staticmethod
     def encrypt_password(password):
         """"Encrypt Password"""
         password = encrypt.dencrypt("encrypt", password)
         return password
 
-    def save_new_mail_data(self, *args):
+    def save_new_mail_data(self, button=None, type_of_update=None):
+        # TODO: need to be changed - One mail updated per time, why update all the list
         # Get Data from text entries from the mail settings dialog
         email = self.mail_settings_builder.get_builder().get_object('email_entry').get_text()
         password = self.mail_settings_builder.get_builder().get_object('password_entry').get_text()
@@ -249,37 +350,51 @@ class MailChecker:
         # Encrypt the password
         password = self.encrypt_password(password)
 
-        # Save Email Data
-        credentials = open(self.current_path + self.credentials_file, 'w')
-        credentials.write(email + "\n")
-        credentials.write(password + "\n")
-        credentials.write(imap + "\n")
-        credentials.write(str(int(timer)) + "\n")
-        # Close the credentials file
-        credentials.close()
+        # Convert timer into string type
+        timer = str(timer)
+
+        mail_data = {
+            "email": email,
+            "password": password,
+            "mailIMAP": imap,
+            "checker_timer_in_minutes": timer
+        }
+
+        # Save mail Data
+        if type_of_update == "new":
+            # Insert row of data into the database
+            self.database.insert(mail_data)
+            # Add the new mail to the TreeView list
+            list_of_mails = self.get_list_of_mails()
+            self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
+        elif type_of_update == "update":
+            # get row_id
+            selected_mail, itr = self.settings_builder.get_selected_mail()
+            row_id = selected_mail.get_path(itr)[0] + 1
+            self.database.update(row_id, mail_data)
 
         # Change the label of cancel button into "Close"
         self.mail_settings_builder.change_cancel_button_to_close()
 
-        # Load mail data from credentials file
-        self.load_mail_account()
+        # Re-load mail data
+        del self.list_of_mails[:]
+        self.load_mail_accounts()
 
-        # load settings if there this is the first execute time
+        # load settings if this is the first executing time
         if self.settings_data is None:
             self.load_settings()
 
-        # Now it is suppose that mail data is true
-        # and there is an internet connection
-        self.mail_checker_core.is_invalid_mail_account = False
-        self.mail_checker_core.is_there_internet_connection = True
+        # delete and re-Construct the mail checker core
+        del self.list_of_mails_cores[:]
+        for iii in range(0, self.list_of_mails.__len__()):
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data, self.tray_icon)
+            self.list_of_mails_cores.append(core)
 
-        # re-Construct the mail checker core
-        self.mail_checker_core = mail_checker_core.Core(self.mail_account_data, self.settings_data, self.tray_icon)
-        # Check for new emails
-        self.mail_checker_core.timer(None, "initiate")
+            # Check for new emails
+            core.timer(None, "initiate")
 
     def save_new_settings(self, *args):
-        action_on_left_click_tray_icon =\
+        action_on_left_click_tray_icon = \
             self.settings_builder.get_builder().get_object('action_on_left_click_tray_icon').get_text()
         action_on_new_mail = \
             self.settings_builder.get_builder().get_object('action_on_new_mail').get_text()
@@ -309,7 +424,9 @@ class MailChecker:
 
     def get_list_of_mails(self):
         mail_list = []
-        mail_list.append(self.mail_account_data["email"])
+
+        for mail_account in self.list_of_mails:
+            mail_list.append(mail_account["email"])
 
         return mail_list
 
@@ -327,6 +444,7 @@ class MailChecker:
     @staticmethod
     def close_app(*args):
         Gtk.main_quit()
+
 
 if __name__ == '__main__':
     mail_checker = MailChecker()
