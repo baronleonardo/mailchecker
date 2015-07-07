@@ -158,6 +158,7 @@ class Core:
         print("Mails # = " + str(self.unread_msgs_num))
 
         # change tray icon for new messages
+        # TODO: Duplicate if there are more that one mail account
         self.tray_icon.set_from_file(
             self.current_path + self.settings_data["new_messages_tray_icon"])
         # if number of messages changed from last check
