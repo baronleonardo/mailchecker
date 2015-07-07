@@ -31,6 +31,8 @@ class Core:
 
     is_invalid_mail_account = False
     is_there_internet_connection = True
+    is_checking_for_new_mails = False
+    has_new_message = False
 
     from_milliseconds_to_minutes = 60 * 1000
 
@@ -41,8 +43,8 @@ class Core:
         self.tray_icon = tray_icon
 
         # Tray icon tooltip
-        tray_icon.set_tooltip_text(
-            "You have " + str(self.unread_msgs_num) + " new messages.")
+        # tray_icon.set_tooltip_text(
+        #     "You have " + str(self.unread_msgs_num) + " new messages.")
 
     def timer(self, button=None, state=None):
         if state == "initiate":
@@ -53,7 +55,7 @@ class Core:
             # check mail upon startup
             # "initial" is used to make sure that this timer will work
             # only once and will not interfere with the main timer
-            self.current_timer_id = GObject.timeout_add( 1 * 1000, self.check_new_mails, "initial")
+            self.current_timer_id = GObject.timeout_add(1 * 1000, self.check_new_mails, "initial")
             print("timer id=" + str(self.current_timer_id) + " added")
 
         elif state == "re-initiate":
@@ -63,7 +65,6 @@ class Core:
             self.timer("initiate")
 
     def send_notification(self, number_of_mails):
-        str_number_of_mails = str(number_of_mails)
 
         # to display "mail" if only one mail is there, and "mails" if there's
         # more than one mail.
@@ -73,7 +74,7 @@ class Core:
             new_mail = " new mails."
 
         notify = Notify.Notification.new(
-            "You've Got Mail!", str_number_of_mails + new_mail,
+            "You've Got Mail!", str(number_of_mails) + new_mail,
             self.settings_data["notification_icon"])
 
         if not notify.show():
@@ -99,11 +100,17 @@ class Core:
     def thread_check_mail(self):
         """Don't call this method call checkMail() instead"""
 
+        self.is_checking_for_new_mails = True
+
         try:
             connection = imaplib.IMAP4_SSL(self.mail_account_data["mailIMAP"])
 
+            self.is_there_internet_connection = True
+
             if connection.login(self.mail_account_data["email"], self.mail_account_data["password"])[0] != 'OK':
                 exit("no conn")
+
+            self.is_invalid_mail_account = False
 
             print(self.mail_account_data["email"])
 
@@ -119,21 +126,24 @@ class Core:
                 print("Zero new mails")
 
                 # Tray icon tooltip
-                self.tray_icon.set_tooltip_text(
-                    "You have " + str(self.unread_msgs_num) + " new messages.")
+                # self.tray_icon.set_tooltip_text(
+                #     "You have " + str(self.unread_msgs_num) + " new messages.")
             else:
                 self.on_new_mail()
 
             # Close the connection
             connection.shutdown()
-
         except:
             if self.check_internet_availability() is False:
                 self.on_no_internet_connection()
+                self.is_there_internet_connection = False
                 print("No internet connection")
             else:
                 self.invalid_mail_data()
+                self.is_invalid_mail_account = True
                 print("Invalid mail account data")
+
+        self.is_checking_for_new_mails = False
 
     def on_new_mail(self):
 
@@ -157,15 +167,15 @@ class Core:
             print("Unchanged number of new mails")
 
         # Tray icon tooltip
-        self.tray_icon.set_tooltip_text(
-            "You have " + str(self.unread_msgs_num) + " new messages.")
+        # self.tray_icon.set_tooltip_text(
+        #     "You have " + str(self.unread_msgs_num) + " new messages.")
 
     @staticmethod
     def check_internet_availability():
         try:
-            response = urllib2.urlopen('http://google.com', timeout=1)
+            url_available = urllib2.urlopen('http://google.com', timeout=1)
             return True
-        except urllib2.URLError as err:
+        except urllib2.URLError as e:
             pass
         return False
 
