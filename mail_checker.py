@@ -41,7 +41,7 @@ class MailChecker:
         else:
             self.on_settings_file_not_found()
 
-        if self.db_exists():
+        if self.database.db_exists():
             self.load_mail_accounts()
         else:
             self.database.on_db_not_found()
