@@ -10,7 +10,7 @@ class DatabaseController:
 
     def __init__(self, current_path):
         self.current_path = current_path
-
+    
     def db_exists(self):
         # Check if mail account file exists
         f = os.path.exists(self.current_path + self.db_file)

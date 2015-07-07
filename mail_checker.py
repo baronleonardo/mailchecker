@@ -112,35 +112,7 @@ class MailChecker:
 
         settings.close()
 
-<<<<<<< HEAD
-    def credentials_file_exists(self):
-        # Check if mail account file exists
-        f = os.path.exists(self.current_path + self.credentials_file)
-        if f is False:
-            os.system("touch '" + self.current_path + self.credentials_file + "'")
-            return False
-        else:
-            return True
-
-    def on_credentials_file_not_found(self):
-        """Show mail settings dialog"""
-        self.show_mail_settings()
-
-    def load_mail_account(self, type_of_load=None):
-        credentials = open(self.current_path + "credentials", 'r')
-        str_credentials = credentials.read()
-
-        print(str_credentials)
-
-        email = str_credentials.splitlines()[0]
-        password = str_credentials.splitlines()[1]
-        mailIMAP = str_credentials.splitlines()[2]
-        checker_timer = int(str_credentials.splitlines()[3])
-
-        password = encrypt.dencrypt("decrypt", password)
-=======
     def load_mail_accounts(self, type_of_load=None, mail_data=None):
->>>>>>> a1a1b33a4c4062f6032922ca86494a486634909a
 
         if type_of_load == "dialog":
             self.mail_settings_builder.load_mail_data(mail_data)
