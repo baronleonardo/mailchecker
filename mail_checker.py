@@ -7,6 +7,7 @@ import db_controller
 import mail_checker_core
 import mail_settings_ui
 import settings_ui
+import triggers
 
 
 class MailChecker:
@@ -58,8 +59,13 @@ class MailChecker:
         self.tray_icon_tooltip = self.create_tray_icon_tooltip()
 
         for iii in range(0, self.list_of_mails.__len__()):
-            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data, self.tray_icon)
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data)
             self.list_of_mails_cores.append(core)
+
+        # Create a trigger when receiving new email
+        mail_triggers = triggers.Triggers(self.settings_data, self.list_of_mails_cores.__len__(),
+                                          self.tray_icon, self.current_path)
+        mail_triggers.initiate(self.list_of_mails_cores)
 
         self.right_clicked_menu = self.create_right_clicked_menu()
         self.initialize_notification_system()
@@ -218,14 +224,9 @@ class MailChecker:
 
     def on_left_click_tray_icon(self, *args):
         print("left click")
-        if self.settings_data["action_on_new_mail"] != "":
+        if self.settings_data["action_on_left_click_tray_icon"] != "":
             # run the command in background and direct the errors to /dev/null black hole
             os.system(self.settings_data["action_on_left_click_tray_icon"] + " 2> /dev/null &")
-
-    def on_new_emails(self):
-        if self.settings_data["action_on_left_click_tray_icon"] != "":
-            # TODO: on new mails
-            pass
 
     def set_tooltip(self, widget=None, x=0, y=0, keyboard_mode=None,
                     tooltip=None):
@@ -359,7 +360,7 @@ class MailChecker:
         # delete and re-Construct the mail checker core
         del self.list_of_mails_cores[:]
         for iii in range(0, self.list_of_mails.__len__()):
-            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data, self.tray_icon)
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data)
             self.list_of_mails_cores.append(core)
 
             # Check for new emails

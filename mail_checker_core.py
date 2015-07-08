@@ -19,7 +19,7 @@ class Core:
 
     mail_account_data = None
     settings_data = None
-    tray_icon = None
+    # tray_icon = None
 
     # used to compare current unread messages with those
     # from last time we checked so that we would only send notifications
@@ -34,13 +34,22 @@ class Core:
     is_checking_for_new_mails = False
     has_new_message = False
 
+    new_mail_trigger = None
+    invalid_mail_trigger = None
+    no_internet_connection_trigger = None
+
     from_milliseconds_to_minutes = 60 * 1000
 
-    def __init__(self, mail_account_data, settings_data, tray_icon):
+    def __init__(self, mail_account_data, settings_data):
 
         self.mail_account_data = mail_account_data
         self.settings_data = settings_data
-        self.tray_icon = tray_icon
+        # self.tray_icon = tray_icon
+
+        # Initiate triggers
+        self.new_mail_trigger = threading.Event()
+        self.invalid_mail_trigger = threading.Event()
+        self.no_internet_connection_trigger = threading.Event()
 
         # Tray icon tooltip
         # tray_icon.set_tooltip_text(
@@ -121,9 +130,11 @@ class Core:
                 connection.search(None, 'UnSeen')[1][0].split())
 
             if self.unread_msgs_num == 0:
-                self.tray_icon.set_from_file(
-                    self.current_path + self.settings_data["zero_messages_tray_icon"])
+                # self.tray_icon.set_from_file(
+                #     self.current_path + self.settings_data["zero_messages_tray_icon"])
                 print("Zero new mails")
+                self.unread_msgs_num = 0
+                self.oldNumberOfMails = 0
 
                 # Tray icon tooltip
                 # self.tray_icon.set_tooltip_text(
@@ -134,14 +145,7 @@ class Core:
             # Close the connection
             connection.shutdown()
         except:
-            if self.check_internet_availability() is False:
-                self.on_no_internet_connection()
-                self.is_there_internet_connection = False
-                print("No internet connection")
-            else:
-                self.invalid_mail_data()
-                self.is_invalid_mail_account = True
-                print("Invalid mail account data")
+            self.error()
 
         self.is_checking_for_new_mails = False
 
@@ -159,11 +163,12 @@ class Core:
 
         # change tray icon for new messages
         # TODO: Duplicate if there are more that one mail account
-        self.tray_icon.set_from_file(
-            self.current_path + self.settings_data["new_messages_tray_icon"])
+        # self.tray_icon.set_from_file(
+        #     self.current_path + self.settings_data["new_messages_tray_icon"])
         # if number of messages changed from last check
         if is_number_of_mails_changed:
             self.send_notification(self.unread_msgs_num)
+            self.new_mail_trigger.set()
         else:
             print("Unchanged number of new mails")
 
@@ -171,10 +176,20 @@ class Core:
         # self.tray_icon.set_tooltip_text(
         #     "You have " + str(self.unread_msgs_num) + " new messages.")
 
+    def error(self):
+        if self.check_internet_availability() is False:
+            self.on_no_internet_connection()
+            self.is_there_internet_connection = False
+            print("No internet connection")
+        else:
+            self.invalid_mail_data()
+            self.is_invalid_mail_account = True
+            print("Invalid mail account data")
+
     @staticmethod
     def check_internet_availability():
         try:
-            url_available = urllib2.urlopen('http://google.com', timeout=1)
+            url_available = urllib2.urlopen('http://google.com', timeout=2)
             return True
         except urllib2.URLError as e:
             pass
@@ -182,9 +197,12 @@ class Core:
 
     def on_no_internet_connection(self):
         if self.is_there_internet_connection is True:
+            self.oldNumberOfMails = 0
+            self.unread_msgs_num = 0
             # Change tray icon to red to indicate an error
-            self.tray_icon.set_from_file(
-                self.current_path + self.settings_data["error_tray_icon"])
+            # self.tray_icon.set_from_file(
+            #     self.current_path + self.settings_data["error_tray_icon"])
+            self.no_internet_connection_trigger.set()
 
         self.is_there_internet_connection = False
 
@@ -193,13 +211,15 @@ class Core:
             if self.mail_account_data is None:
                 print("data is None")
             # Change tray icon to red to indicate an error
-            self.tray_icon.set_from_file(
-                self.current_path + self.settings_data["error_tray_icon"])
+            # self.tray_icon.set_from_file(
+            #     self.current_path + self.settings_data["error_tray_icon"])
             # Send notification - Invalid Mail account data
             icon = Gtk.STOCK_DIALOG_ERROR
             notify = Notify.Notification.new(
                 "Error!", "Invalid Mail account data", icon)
             notify.show()
+
+            self.invalid_mail_trigger.set()
 
         self.is_invalid_mail_account = True
 
