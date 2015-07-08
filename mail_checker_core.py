@@ -123,7 +123,7 @@ class Core:
             if self.unread_msgs_num == 0:
                 self.tray_icon.set_from_file(
                     self.current_path + self.settings_data["zero_messages_tray_icon"])
-                print("Zero new mails")
+                print("No new mails.")
 
                 # Tray icon tooltip
                 # self.tray_icon.set_tooltip_text(

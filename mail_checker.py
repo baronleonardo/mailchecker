@@ -36,12 +36,12 @@ class MailChecker:
 
         self.database = db_controller.DatabaseController(self.current_path)
 
-        if self.check_settings_file_existence():
+        if self.settings_file_exists():
             self.load_settings()
         else:
             self.on_settings_file_not_found()
 
-        if self.database.check_db_existence():
+        if self.database.db_exists():
             self.load_mail_accounts()
         else:
             self.database.on_db_not_found()
@@ -72,7 +72,7 @@ class MailChecker:
         if not Notify.init("Basics"):
             sys.exit(1)
 
-    def check_settings_file_existence(self):
+    def settings_file_exists(self):
         # Check if settings file exists
         f = os.path.exists(self.current_path + self.settings_file)
         if f is False:
@@ -95,11 +95,11 @@ class MailChecker:
         settings = open(self.current_path + self.settings_file, 'r')
         str_settings = settings.read()
 
-        zero_messages_tray_icon = str_settings.splitlines()[0]
-        new_messages_tray_icon = str_settings.splitlines()[1]
-        error_tray_icon = str_settings.splitlines()[2]
+        zero_messages_tray_icon   = str_settings.splitlines()[0]
+        new_messages_tray_icon    = str_settings.splitlines()[1]
+        error_tray_icon           = str_settings.splitlines()[2]
         action_on_left_click_tray = str_settings.splitlines()[3]
-        action_on_new_mail = str_settings.splitlines()[4]
+        action_on_new_mail        = str_settings.splitlines()[4]
 
         self.settings_data = {
             "zero_messages_tray_icon": zero_messages_tray_icon,
@@ -338,7 +338,10 @@ class MailChecker:
             self.database.insert(mail_data)
             # Add the new mail to the TreeView list
             list_of_mails = self.get_list_of_mails()
-            self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
+            if list_of_mails.__len__() == 0:
+                self.settings_builder.update_mail_list(mail_data.get("email"))
+            else:
+                self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
         elif type_of_update == "update":
             # get row_id
             selected_mail, itr = self.settings_builder.get_selected_mail()

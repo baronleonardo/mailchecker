@@ -62,3 +62,8 @@ credentials
 settings
 # ignore backup files
 *~
+# ignore the log
+log
+
+#ignore the database
+db
