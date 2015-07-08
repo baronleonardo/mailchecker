@@ -209,10 +209,7 @@ class Core:
     def invalid_mail_data(self):
         if self.is_invalid_mail_account is False:
             if self.mail_account_data is None:
-                print("data is None")
-            # Change tray icon to red to indicate an error
-            # self.tray_icon.set_from_file(
-            #     self.current_path + self.settings_data["error_tray_icon"])
+                print("No mail data")
             # Send notification - Invalid Mail account data
             icon = Gtk.STOCK_DIALOG_ERROR
             notify = Notify.Notification.new(

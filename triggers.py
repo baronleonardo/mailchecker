@@ -2,6 +2,7 @@ import os
 import threading
 
 class Triggers:
+    """Read about threading.Event and Semaphore"""
     settings_data = None
     number_of_mail_cores = 0
     length_of_core_list = 0
@@ -23,6 +24,7 @@ class Triggers:
 
     def initiate(self, list_of_mail_cores):
         for core in list_of_mail_cores:
+            # Start the triggers
             threading.Thread(target=self.on_new_mail, args=(core,)).start()
             threading.Thread(target=self.on_no_internet, args=(core,)).start()
             threading.Thread(target=self.on_invalid_mail_account, args=(core,)).start()
@@ -37,8 +39,8 @@ class Triggers:
 
             self.semaphore.release()
 
+            # If the user assign a reaction on new mail(s)
             if self.settings_data["action_on_new_mail"] != "":
-                # TODO: on new mails
                 os.system(self.settings_data["action_on_new_mail"] + " 2> /dev/null &")
 
             core.new_mail_trigger.clear()
@@ -49,6 +51,7 @@ class Triggers:
 
             self.semaphore.acquire()
 
+            # Change tray icon to red to indicate an error
             self.tray_icon.set_from_file(
                 self.current_path + self.settings_data["error_tray_icon"])
 
@@ -62,6 +65,7 @@ class Triggers:
 
             self.semaphore.acquire()
 
+            # Change tray icon to red to indicate an error
             self.tray_icon.set_from_file(
                 self.current_path + self.settings_data["error_tray_icon"])
 
