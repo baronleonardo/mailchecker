@@ -62,3 +62,5 @@ credentials
 settings
 # ignore backup files
 *~
+# ignore test files
+test.py
