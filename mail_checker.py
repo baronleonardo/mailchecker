@@ -59,7 +59,7 @@ class MailChecker:
         self.tray_icon_tooltip = self.create_tray_icon_tooltip()
 
         for iii in range(0, self.list_of_mails.__len__()):
-            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data)
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data["notification_icon"])
             self.list_of_mails_cores.append(core)
 
         # Create a trigger when receiving new email
@@ -363,7 +363,7 @@ class MailChecker:
         # delete and re-Construct the mail checker core
         del self.list_of_mails_cores[:]
         for iii in range(0, self.list_of_mails.__len__()):
-            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data)
+            core = mail_checker_core.Core(self.list_of_mails[iii], self.settings_data["notification_icon"])
             self.list_of_mails_cores.append(core)
 
             # Check for new emails

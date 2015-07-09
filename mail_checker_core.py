@@ -18,7 +18,7 @@ class Core:
     current_path = os.path.abspath(os.path.dirname(sys.argv[0])) + "/"
 
     mail_account_data = None
-    settings_data = None
+    notification_icon = None
     # tray_icon = None
 
     # used to compare current unread messages with those
@@ -40,10 +40,10 @@ class Core:
 
     from_milliseconds_to_minutes = 60 * 1000
 
-    def __init__(self, mail_account_data, settings_data):
+    def __init__(self, mail_account_data, notification_icon):
 
         self.mail_account_data = mail_account_data
-        self.settings_data = settings_data
+        self.notification_icon = notification_icon
         # self.tray_icon = tray_icon
 
         # Initiate triggers
@@ -84,7 +84,7 @@ class Core:
 
         notify = Notify.Notification.new(
             "You've Got Mail!", str(number_of_mails) + new_mail,
-            self.settings_data["notification_icon"])
+            self.notification_icon)
 
         if not notify.show():
             print("Failed to send notification")
