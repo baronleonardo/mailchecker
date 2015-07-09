@@ -25,9 +25,16 @@ class Triggers:
     def initiate(self, list_of_mail_cores):
         for core in list_of_mail_cores:
             # Start the triggers
-            threading.Thread(target=self.on_new_mail, args=(core,)).start()
-            threading.Thread(target=self.on_no_internet, args=(core,)).start()
-            threading.Thread(target=self.on_invalid_mail_account, args=(core,)).start()
+            # setDaemon solved the problem of "the applet not quiting!"
+            on_new_mail = threading.Thread(target=self.on_new_mail, args=(core,))
+            on_new_mail.setDaemon(True)
+            on_new_mail.start()
+            on_no_internet = threading.Thread(target=self.on_no_internet, args=(core,))
+            on_no_internet.setDaemon(True)
+            on_no_internet.start()
+            on_invalid_mail_account = threading.Thread(target=self.on_invalid_mail_account, args=(core,))
+            on_invalid_mail_account.setDaemon(True)
+            on_invalid_mail_account.start()
 
     def on_new_mail(self, core):
         while True:
