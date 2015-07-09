@@ -33,6 +33,18 @@ class Handler:
     def on_click_edit_button(*args):
         print("edit button clicked")
 
+    @staticmethod
+    def on_error_button_click(self):
+        print("Error button clicked")
+
+    @staticmethod
+    def on_new_mail_button_click(self):
+        print("new mail button clicked")
+
+    @staticmethod
+    def on_normal_button_click(self):
+        print("normal button clicked")
+
 
 class DialogBuilder:
     builder = Gtk.Builder()
@@ -105,8 +117,26 @@ class DialogBuilder:
     def get_remove_button(self):
         return self.builder.get_object("remove_email_button")
 
+    def get_new_button(self):
+        return self.builder.get_object("new_button")
+
+    def get_normal_button(self):
+        return self.builder.get_object("normal_button")
+
+    def get_normal_tray_icon(self):
+        return self.builder.get_object("normal_tray_icon")
+
+    def get_error_button(self):
+        return self.builder.get_object("error_button")
+
+    def get_new_tray_icon(self):
+        return self.builder.get_object("new_tray_icon")
+
     def get_mail_list_store(self):
         return self.builder.get_object("email_list")
+
+    def get_error_tray_icon(self):
+        return self.builder.get_object("error_tray_icon")
 
     def get_builder(self):
         return self.builder

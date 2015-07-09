@@ -8,6 +8,7 @@ import mail_checker_core
 import mail_settings_ui
 import settings_ui
 import triggers
+import file_chooser
 
 
 class MailChecker:
@@ -294,6 +295,7 @@ class MailChecker:
             save_button.connect('clicked', self.save_new_mail_data, "update")
 
     def settings_dialog_additional_signals(self):
+        # TODO: slots methods need to be transferred into their corresponding file
         close_button = self.settings_builder.get_close_button()
         close_button.connect('clicked', self.save_new_settings)
 
@@ -305,6 +307,40 @@ class MailChecker:
 
         add_button = self.settings_builder.get_add_button()
         add_button.connect('clicked', self.on_add_new_mail_data)
+
+        normal_button = self.settings_builder.get_normal_button()
+        normal_button.connect('clicked', self.choose_tray_icon, 'normal_button')
+
+        new_button = self.settings_builder.get_new_button()
+        new_button.connect('clicked', self.choose_tray_icon, 'new_button')
+
+        error_button = self.settings_builder.get_error_button()
+        error_button.connect('clicked', self.choose_tray_icon, 'error_button')
+
+    def choose_tray_icon(self, button=None, button_type=None):
+        chooser = file_chooser.FileChooserWindow()
+        chosen_file = chooser.run()
+
+        if button_type == "normal_button":
+            # Update settings data
+            self.settings_data["zero_messages_tray_icon"] = chosen_file
+            # Change the icon and update the button
+            icon_image = self.settings_builder.get_normal_tray_icon()
+            button.set_image(icon_image.new_from_file(chosen_file))
+
+        elif button_type == "new_button":
+            # Update settings data
+            self.settings_data["new_messages_tray_icon"] = chosen_file
+            # Change the icon and update the button
+            icon_image = self.settings_builder.get_new_tray_icon()
+            button.set_image(icon_image.new_from_file(chosen_file))
+
+        elif button_type == "error_button":
+            # Update settings data
+            self.settings_data["error_tray_icon"] = chosen_file
+            # Change the icon and update the button
+            icon_image = self.settings_builder.get_error_tray_icon()
+            button.set_image(icon_image.new_from_file(chosen_file))
 
     @staticmethod
     def encrypt_password(password):
