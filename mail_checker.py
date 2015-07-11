@@ -83,7 +83,6 @@ class MailChecker:
         # Check if settings file exists
         f = os.path.exists(self.current_path + self.settings_file)
         if f is False:
-            os.system("touch '" + self.current_path + self.settings_file + "'")
             print("settings file not found!")
             return False
         else:
@@ -91,6 +90,7 @@ class MailChecker:
 
     def on_settings_file_not_found(self):
         """Load default settings"""
+        os.system("touch '" + self.current_path + self.settings_file + "'")
         settings = open(self.current_path + self.settings_file, 'w')
         default = open(self.current_path + self.default_settings_file, 'r')
 
@@ -134,27 +134,28 @@ class MailChecker:
         # Create a dictionary for this list
         for mail_account in list_of_mails:
             mail_account_data = {
-                "email": mail_account[0],
-                "password": encrypt.dencrypt("decrypt", mail_account[1]),
-                "mailIMAP": mail_account[2],
-                "mailbox": mail_account[3],
-                "checker_timer_in_minutes": mail_account[4],
+                "mailbox_name": mail_account[0],
+                "email": mail_account[1],
+                "password": encrypt.dencrypt("decrypt", mail_account[2]),
+                "mailIMAP": mail_account[3],
+                "mailbox": mail_account[4],
+                "checker_timer_in_minutes": mail_account[5],
             }
 
             self.list_of_mails.append(mail_account_data)
 
     def on_edit_current_mail_data(self, button=None, type_of_load=None):
-        selected_mail, itr = self.settings_builder.get_selected_mail()
+        selected_mail, itr = self.settings_builder.get_selected_mailbox()
 
         mail_data = None
         for mail in self.list_of_mails:
-            if mail["email"] == selected_mail.get_value(itr, 0):
+            if mail["mailbox_name"] == selected_mail.get_value(itr, 0):
                 mail_data = mail
         self.show_mail_settings("update")
         self.load_mail_accounts(type_of_load, mail_data)
 
     def on_remove_current_mail_data(self, *args):
-        selected_mail, itr = self.settings_builder.get_selected_mail()
+        selected_mail, itr = self.settings_builder.get_selected_mailbox()
         row_id = selected_mail.get_path(itr)[0]
 
         # Remove from the TreeView
@@ -187,7 +188,6 @@ class MailChecker:
 
     def create_tray_icon_tooltip(self):
         tooltip = Gtk.Tooltip()
-        # self.set_tooltip(None, None, None, None, None, "checking")
         # update unread msgs if mouse hover on the tray icon
         self.tray_icon.connect("query-tooltip", self.set_tooltip)
         return tooltip
@@ -236,28 +236,33 @@ class MailChecker:
         unread_msgs = 0
         has_new_msgs = True
 
+        states = []
+
         for core in self.list_of_mails_cores:
             if core.is_checking_for_new_mails:
                 message = "Checking ..."
-                has_new_msgs = False
                 break
             elif core.is_there_internet_connection is False:
                 message = "No Internet connection!"
-                has_new_msgs = False
                 break
             elif core.is_invalid_mail_account:
-                message = "Yoy have invalid mail Account(s)"
-                has_new_msgs = False
-                break
+                states.append(core.mail_account_data["mailbox_name"] + ": Invalid mail Account\n")
             else:
-                # TODO: need to be optimized
+                states.append(str(core.unread_msgs_num) + " in " + core.mail_account_data["mailbox_name"])
                 unread_msgs += core.unread_msgs_num
 
-        # TODO: need better check list
-        if has_new_msgs is True:
-            message = "You have " + str(unread_msgs) + " new message(s)."
+        if states.__len__() == 0:
+            self.tray_icon.set_tooltip_text(message)
 
-        self.tray_icon.set_tooltip_text(message)
+        else:
+            message = "You have " + str(unread_msgs) + " new message(s):\n"
+
+            for iii in range(0, states.__len__()):
+                message += "\t" + states[iii]
+                if iii != states.__len__() - 1:
+                    message += "\n"
+
+            self.tray_icon.set_tooltip_text(message)
 
     def show_mail_settings(self, type_of_update):
         self.mail_settings_builder = mail_settings_ui.DialogBuilder()
@@ -273,7 +278,7 @@ class MailChecker:
         # Show Settings Dialog
         self.settings_builder.show_dialog()
         # load emails account
-        self.settings_builder.load_mails(self.get_list_of_mails())
+        self.settings_builder.load_mailboxes(self.get_list_of_mailboxes())
         self.settings_builder.load_icons(self.settings_data["zero_messages_tray_icon"],
                                          self.settings_data["new_messages_tray_icon"],
                                          self.settings_data["error_tray_icon"])
@@ -351,6 +356,7 @@ class MailChecker:
     def save_new_mail_data(self, button=None, type_of_update=None):
         # TODO: need to be changed - One mail updated per time, why update all the list
         # Get Data from text entries from the mail settings dialog
+        mailbox_name = self.mail_settings_builder.get_builder().get_object('mailbox_name_entry').get_text()
         email = self.mail_settings_builder.get_builder().get_object('email_entry').get_text()
         password = self.mail_settings_builder.get_builder().get_object('password_entry').get_text()
         imap = self.mail_settings_builder.get_builder().get_object('imap_entry').get_text()
@@ -363,6 +369,7 @@ class MailChecker:
         timer = str(timer)
 
         mail_data = {
+            "mailbox_name": mailbox_name,
             "email": email,
             "password": password,
             "mailIMAP": imap,
@@ -374,19 +381,23 @@ class MailChecker:
             # Insert row of data into the database
             self.database.insert(mail_data)
             # Add the new mail to the TreeView list
-            list_of_mails = self.get_list_of_mails()
-            if list_of_mails.__len__() == 0:
-                self.settings_builder.update_mail_list(mail_data.get("email"))
+            list_of_mailboxes = self.get_list_of_mailboxes()
+            if list_of_mailboxes.__len__() == 0:
+                self.settings_builder.update_mailboxes_list(mail_data.get("mailbox_name"))
             else:
-                self.settings_builder.update_mail_list(list_of_mails[list_of_mails.__len__()-1])
+                self.settings_builder.update_mailboxes_list(list_of_mailboxes[list_of_mailboxes.__len__()-1])
         elif type_of_update == "update":
-            # get row_id
-            selected_mail, itr = self.settings_builder.get_selected_mail()
-            row_id = selected_mail.get_path(itr)[0] + 1
+            # Get row_id
+            selected_mailbox, itr = self.settings_builder.get_selected_mailbox()
+            row_id = selected_mailbox.get_path(itr)[0] + 1
+            # Update database
             self.database.update(row_id, mail_data)
+            # Update TreeView
+            mailbox_name = self.mail_settings_builder.get_mailbox_name().get_text()
+            selected_mailbox.set_value(itr, 0, mailbox_name)
 
-        # Change the label of cancel button into "Close"
-        self.mail_settings_builder.change_cancel_button_to_close()
+        # Close the mail settings dialog
+        self.mail_settings_builder.close_mail_settings_dialog()
 
         # Re-load mail data
         del self.list_of_mails[:]
@@ -434,13 +445,13 @@ class MailChecker:
         # Destroy
         self.settings_builder.get_dialog().destroy()
 
-    def get_list_of_mails(self):
-        mail_list = []
+    def get_list_of_mailboxes(self):
+        mailbox_list = []
 
         for mail_account in self.list_of_mails:
-            mail_list.append(mail_account["email"])
+            mailbox_list.append(mail_account["mailbox_name"])
 
-        return mail_list
+        return mailbox_list
 
     def get_tray_icon(self):
         if self.tray_icon is not None:

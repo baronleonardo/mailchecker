@@ -10,7 +10,7 @@
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-dialog-warning</property>
+    <property name="icon_name">dialog-information</property>
   </object>
   <object class="GtkDialog" id="dialog1">
     <property name="can_focus">False</property>
@@ -64,162 +64,268 @@
             <property name="expand">False</property>
             <property name="fill">False</property>
             <property name="pack_type">end</property>
-            <property name="position">0</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
-          <object class="GtkGrid" id="grid1">
+          <object class="GtkBox" id="box2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="valign">center</property>
-            <property name="hexpand">False</property>
-            <property name="vexpand">True</property>
             <child>
-              <object class="GtkLabel" id="email_label">
+              <object class="GtkLabel" id="mailbox_name">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xpad">10</property>
-                <property name="label" translatable="yes">E-mail</property>
+                <property name="label" translatable="yes">Mailbox 
+Name</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="padding">9</property>
+                <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="password_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xpad">10</property>
-                <property name="label" translatable="yes">Password</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="password_entry">
+              <object class="GtkEntry" id="mailbox_name_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hexpand">True</property>
-                <property name="visibility">False</property>
-                <property name="invisible_char">●</property>
-                <property name="placeholder_text" translatable="yes">password...</property>
-                <property name="input_purpose">password</property>
               </object>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="imap_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xpad">10</property>
-                <property name="label" translatable="yes">IMAP</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkEntry" id="imap_entry">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">ex. imap.gmail.com</property>
-                <property name="hexpand">True</property>
-                <property name="invisible_char">●</property>
-                <property name="primary_icon_tooltip_text" translatable="yes">ex. imap.gmail.com</property>
-                <property name="placeholder_text" translatable="yes">imap...</property>
-                <property name="input_hints">GTK_INPUT_HINT_LOWERCASE | GTK_INPUT_HINT_NONE</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSpinButton" id="timer_spin">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">Timer in minutes</property>
-                <property name="max_length">2</property>
-                <property name="activates_default">True</property>
-                <property name="caps_lock_warning">False</property>
-                <property name="progress_pulse_step">1</property>
-                <property name="primary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
-                <property name="secondary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
-                <property name="placeholder_text" translatable="yes">Timer in seconds</property>
-                <property name="adjustment">adjustment1</property>
-                <property name="update_policy">if-valid</property>
-                <property name="value">9.9999999997764828</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="timer_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xpad">10</property>
-                <property name="label" translatable="yes">Timer</property>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkBox" id="box1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkEntry" id="email_entry">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hexpand">True</property>
-                    <property name="placeholder_text" translatable="yes">email...</property>
-                    <property name="input_purpose">email</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="hint">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="tooltip_text" translatable="yes">If you fail to load your gmail account,
-Check this link out:
-https://support.google.com/mail/answer/78754</property>
-                    <property name="image">image1</property>
-                    <property name="always_show_image">True</property>
-                    <signal name="clicked" handler="open_link" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
+            <property name="padding">5</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFrame" id="imap_frame">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">none</property>
+            <child>
+              <object class="GtkGrid" id="grid1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">center</property>
+                <property name="hexpand">False</property>
+                <property name="vexpand">True</property>
+                <property name="column_spacing">6</property>
+                <property name="column_homogeneous">True</property>
+                <child>
+                  <object class="GtkBox" id="box3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="email_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">E-mail</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">16</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="box1">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkEntry" id="email_entry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="placeholder_text" translatable="yes">email...</property>
+                            <property name="input_purpose">email</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="hint">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">If you fail to load your gmail account,
+Check this link out:
+https://support.google.com/mail/answer/78754</property>
+                            <property name="image">image1</property>
+                            <property name="always_show_image">True</property>
+                            <signal name="clicked" handler="open_link" swapped="no"/>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="box4">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="password_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Password</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">5</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="password_entry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="visibility">False</property>
+                        <property name="invisible_char">●</property>
+                        <property name="placeholder_text" translatable="yes">password...</property>
+                        <property name="input_purpose">password</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="box5">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="imap_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">IMAP</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">18</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="imap_entry">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">ex. imap.gmail.com</property>
+                        <property name="hexpand">True</property>
+                        <property name="invisible_char">●</property>
+                        <property name="primary_icon_tooltip_text" translatable="yes">ex. imap.gmail.com</property>
+                        <property name="placeholder_text" translatable="yes">imap...</property>
+                        <property name="input_hints">GTK_INPUT_HINT_LOWERCASE | GTK_INPUT_HINT_NONE</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="box6">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkLabel" id="timer_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Timer</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="padding">17</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinButton" id="timer_spin">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Timer in minutes</property>
+                        <property name="max_length">2</property>
+                        <property name="activates_default">True</property>
+                        <property name="caps_lock_warning">False</property>
+                        <property name="progress_pulse_step">1</property>
+                        <property name="primary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
+                        <property name="secondary_icon_tooltip_text" translatable="yes">Timer in seconds</property>
+                        <property name="placeholder_text" translatable="yes">Timer in seconds</property>
+                        <property name="adjustment">adjustment1</property>
+                        <property name="update_policy">if-valid</property>
+                        <property name="value">9.9999999997764828</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+              </object>
+            </child>
+            <child type="label">
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">IMAP Server</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="padding">5</property>
             <property name="position">2</property>
           </packing>
         </child>

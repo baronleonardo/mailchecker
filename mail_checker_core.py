@@ -83,7 +83,7 @@ class Core:
             new_mail = " new mails."
 
         notify = Notify.Notification.new(
-            "You've Got Mail!", str(number_of_mails) + new_mail,
+            self.mail_account_data["mailbox_name"], str(number_of_mails) + new_mail,
             self.notification_icon)
 
         if not notify.show():

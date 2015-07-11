@@ -30,6 +30,7 @@ class DatabaseController:
 
         # create table
         list_of_mails = db_cursor.execute('''CREATE TABLE %s (
+                                          mailbox_name,
                                           email	TEXT,
                                           password	TEXT,
                                           mailIMAP	TEXT,
@@ -60,13 +61,13 @@ class DatabaseController:
         # Create a cursor
         db_cursor = db_conn.cursor()
 
-        data = (mail_data["email"], mail_data["password"], mail_data["mailIMAP"],
+        data = (mail_data["mailbox_name"], mail_data["email"], mail_data["password"], mail_data["mailIMAP"],
                 mail_data["checker_timer_in_minutes"])
 
         # Insert row of data into the database
         db_cursor.execute("INSERT INTO " +
                           self.table_name +
-                          " (`email`,`password`,`mailIMAP`,`checker_timer_in_minutes`)" +
+                          " (`mailbox_name`, `email`,`password`,`mailIMAP`,`checker_timer_in_minutes`)" +
                           " VALUES (?,?,?,?);", data)
         db_conn.commit()
         # Close the database
@@ -92,12 +93,12 @@ class DatabaseController:
         # Create a cursor
         db_cursor = db_conn.cursor()
 
-        data = (str(mail_data["email"]), str(mail_data["password"]),
+        data = (mail_data["mailbox_name"], str(mail_data["email"]), str(mail_data["password"]),
                 str(mail_data["mailIMAP"]), str(mail_data["checker_timer_in_minutes"]), str(row_id))
 
         # create table
         list_of_mails = db_cursor.execute("UPDATE " + self.table_name +
-                                          ''' SET `email`=?, `password`=?, `mailIMAP`=?,
+                                          ''' SET `mailbox_name`=?, `email`=?, `password`=?, `mailIMAP`=?,
                                            `checker_timer_in_minutes`=? WHERE
                                            `_rowid_`=?;''', data)
         db_conn.commit()

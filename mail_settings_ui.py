@@ -59,12 +59,16 @@ class DialogBuilder:
     def get_save_button(self):
         return self.save_button
 
+    def get_mailbox_name(self):
+        return self.builder.get_object('mailbox_name_entry')
+
     def show_dialog(self):
         # Show the dialog window
         self.dialog.show()
 
     def load_mail_data(self, mail_data):
         """set Data to text entries in the mail settings dialog"""
+        mailbox_name = self.builder.get_object('mailbox_name_entry').set_text(mail_data["mailbox_name"])
         email = self.builder.get_object('email_entry').set_text(mail_data["email"])
         password = self.builder.get_object('password_entry').set_text(mail_data["password"])
         imap = self.builder.get_object('imap_entry').set_text(mail_data["mailIMAP"])
@@ -73,6 +77,9 @@ class DialogBuilder:
     def change_cancel_button_to_close(self):
         cancel_button = self.builder.get_object("cancel_button")
         cancel_button.set_label("Close")
+
+    def close_mail_settings_dialog(self):
+        self.dialog.destroy()
 
 # if __name__ == "__main__":
 #     dialog = DialogBuilder()

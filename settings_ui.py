@@ -49,7 +49,7 @@ class Handler:
 class DialogBuilder:
     builder = Gtk.Builder()
     dialog = None
-    mail_list = None
+    mailbox_list = None
 
     is_edit_button_clicked = False
     is_add_button_clicked = False
@@ -62,19 +62,19 @@ class DialogBuilder:
         # Get the dialog window
         self.dialog = self.builder.get_object('dialog1')
 
-    def load_mails(self, mails):
-        self.mail_list = mails
-        mail_list = self.get_mail_list_store()
+    def load_mailboxes(self, mailboxes):
+        self.mailbox_list = mailboxes
+        mailbox_list = self.get_mailbox_list_store()
 
         # Load email to the tree view
-        for iii in range(0, mails.__len__()):
-            mail_list.append([mails[iii]])
+        for iii in range(0, mailboxes.__len__()):
+            mailbox_list.append([mailboxes[iii]])
 
-    def update_mail_list(self, new_mail):
-        self.mail_list.append(new_mail)
-        mail_list = self.get_mail_list_store()
+    def update_mailboxes_list(self, new_mailbox):
+        self.mailbox_list.append(new_mailbox)
+        mail_list = self.get_mailbox_list_store()
 
-        mail_list.append([new_mail])
+        mail_list.append([new_mailbox])
 
     def load_icons(self, zero_messages_tray_icon, new_messages_tray_icon, error_tray_icon):
         normal = self.builder.get_object("normal_tray_icon")
@@ -93,14 +93,14 @@ class DialogBuilder:
         on_new_mail_label = self.builder.get_object("action_on_new_mail")
         on_new_mail_label.set_text(action_on_new_mail)
 
-    def get_selected_mail(self):
+    def get_selected_mailbox(self):
         # get Tree View contains list of mails
         tree_view = self.get_tree_view()
         # get selected mail
         selection = tree_view.get_selection()
-        selected_mail, itr = selection.get_selected()
+        selected_mailbox, itr = selection.get_selected()
 
-        return selected_mail, itr
+        return selected_mailbox, itr
 
     def get_tree_view(self):
         return self.builder.get_object("treeview1")
@@ -132,8 +132,8 @@ class DialogBuilder:
     def get_new_tray_icon(self):
         return self.builder.get_object("new_tray_icon")
 
-    def get_mail_list_store(self):
-        return self.builder.get_object("email_list")
+    def get_mailbox_list_store(self):
+        return self.builder.get_object("mailbox_list")
 
     def get_error_tray_icon(self):
         return self.builder.get_object("error_tray_icon")
