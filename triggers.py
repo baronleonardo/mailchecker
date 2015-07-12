@@ -26,7 +26,7 @@ class Triggers:
         for core in list_of_mail_cores:
             # Start the triggers
             # setDaemon solved the problem of "the applet not quiting!"
-            on_new_mail = threading.Thread(target=self.on_new_mail, args=(core,))
+            on_new_mail = threading.Thread(target=self.on_change_in_number_of_new_mails, args=(core,))
             on_new_mail.setDaemon(True)
             on_new_mail.start()
             on_no_internet = threading.Thread(target=self.on_no_internet, args=(core,))
@@ -36,13 +36,17 @@ class Triggers:
             on_invalid_mail_account.setDaemon(True)
             on_invalid_mail_account.start()
 
-    def on_new_mail(self, core):
+    def on_change_in_number_of_new_mails(self, core):
         while True:
-            core.new_mail_trigger.wait()
+            core.new_mails_trigger.wait()
             self.semaphore.acquire()
 
-            self.tray_icon.set_from_file(
-                self.current_path + self.settings_data["new_messages_tray_icon"])
+            if core.unread_msgs_num == 0:
+                self.tray_icon.set_from_file(
+                    self.current_path + self.settings_data["zero_messages_tray_icon"])
+            else:
+                self.tray_icon.set_from_file(
+                    self.current_path + self.settings_data["new_messages_tray_icon"])
 
             self.semaphore.release()
 
@@ -50,7 +54,7 @@ class Triggers:
             if self.settings_data["action_on_new_mail"] != "":
                 os.system(self.settings_data["action_on_new_mail"] + " 2> /dev/null &")
 
-            core.new_mail_trigger.clear()
+            core.new_mails_trigger.clear()
 
     def on_no_internet(self, core):
         while True:

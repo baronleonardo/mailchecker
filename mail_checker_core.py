@@ -34,7 +34,7 @@ class Core:
     is_checking_for_new_mails = False
     has_new_message = False
 
-    new_mail_trigger = None
+    new_mails_trigger = None
     invalid_mail_trigger = None
     no_internet_connection_trigger = None
 
@@ -47,7 +47,7 @@ class Core:
         # self.tray_icon = tray_icon
 
         # Initiate triggers
-        self.new_mail_trigger = threading.Event()
+        self.new_mails_trigger = threading.Event()
         self.invalid_mail_trigger = threading.Event()
         self.no_internet_connection_trigger = threading.Event()
 
@@ -142,6 +142,8 @@ class Core:
             else:
                 self.on_new_mail()
 
+            self.new_mails_trigger.set()
+
             # Close the connection
             connection.shutdown()
         except:
@@ -168,7 +170,6 @@ class Core:
         # if number of messages changed from last check
         if is_number_of_mails_changed:
             self.send_notification(self.unread_msgs_num)
-            self.new_mail_trigger.set()
         else:
             print("Unchanged number of new mails")
 
