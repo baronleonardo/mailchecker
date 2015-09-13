@@ -8,6 +8,7 @@ gtk2
 python2
 pygtk
 PyGObject 3.10.2+
+python-crypto
 
 How To Use:
 ------------
