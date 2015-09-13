@@ -35,8 +35,7 @@ class DatabaseController:
                                           password	TEXT,
                                           mailIMAP	TEXT,
                                           mailbox	TEXT DEFAULT 'INBOX',
-                                          checker_timer_in_minutes	INTEGER,
-                                          PRIMARY KEY(email) );'''
+                                          checker_timer_in_minutes	INTEGER );'''
                                           % self.table_name)
         # Close the Database
         db_conn.close()
@@ -68,7 +67,7 @@ class DatabaseController:
         db_cursor.execute("INSERT INTO " +
                           self.table_name +
                           " (`mailbox_name`, `email`,`password`,`mailIMAP`,`checker_timer_in_minutes`)" +
-                          " VALUES (?,?,?,?);", data)
+                          " VALUES (?,?,?,?,?);", data)
         db_conn.commit()
         # Close the database
         db_conn.close()
