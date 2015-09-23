@@ -74,9 +74,9 @@ class MailChecker:
 
     @staticmethod
     def initialize_notification_system():
-        # initialize pynotify... "Basics" can be changed to whatever... it
+        # initialize pynotify... "Mail Checker" can be changed to whatever... it
         # doesn't matter.
-        if not Notify.init("Basics"):
+        if not Notify.init("Mail Checker"):
             sys.exit(1)
 
     def settings_file_exists(self):
