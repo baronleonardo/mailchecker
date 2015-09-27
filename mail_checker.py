@@ -246,7 +246,7 @@ class MailChecker:
                 message = "No Internet connection!"
                 break
             elif core.is_invalid_mail_account:
-                states.append(core.mail_account_data["mailbox_name"] + ": Invalid mail Account")
+                states.append(core.mail_account_data["mailbox_name"] + ": Invalid mail account")
             else:
                 states.append(str(core.unread_msgs_num) + " in " + core.mail_account_data["mailbox_name"])
                 unread_msgs += core.unread_msgs_num

@@ -214,7 +214,7 @@ class Core:
             # Send notification - Invalid Mail account data
             icon = Gtk.STOCK_DIALOG_ERROR
             notify = Notify.Notification.new(
-                "Error!", "Invalid Mail account data", icon)
+                self.mail_account_data["mailbox_name"], "Invalid Mail account data", icon)
             notify.show()
 
             self.invalid_mail_trigger.set()
