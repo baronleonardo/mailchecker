@@ -33,10 +33,8 @@ Screenshots
 ![myimage-alt-tag](imgs/new_mail(s).png)
 ![myimage-alt-tag](imgs/no_new_mails.png)
 <br />
-<br />
 ##### Trayicon hover:
 ![myimage-alt-tag](imgs/hover.png)
-<br />
 <br />
 ##### Settings - Mail settings:
 ![myimage-alt-tag](imgs/settings.png)
