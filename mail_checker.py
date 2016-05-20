@@ -165,7 +165,8 @@ class MailChecker:
         # Remove mail from mails list
         self.list_of_mails.__delitem__(row_id)
         # Remove from the database
-        self.database.remove(row_id + 1)
+        self.database.remove(row_id)
+        print row_id
 
     def on_add_new_mail_data(self, *args):
         self.show_mail_settings("new")
