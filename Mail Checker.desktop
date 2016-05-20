@@ -1,11 +1,9 @@
-#!/usr/bin/env xdg-open
-
 [Desktop Entry]
 Type=Application
 Encoding=UTF-8
 Name=Mail Checker
 Comment=A very simple script that checks for unread mail
-Exec=/bin/bash mail_checker
+Exec=bash -c '"$(dirname "$1")"/mail_checker' mail_checker %k
 Icon=mailIcon.png
 Terminal=false
 Name[en_US]=Mail Checker
