@@ -26,6 +26,22 @@ imap.mail.com
 - Gmail -> `imap.gmail.com`
 - Yahoo -> `imap.yahoo.com`
 
+Screenshots
+-----------
+##### Trayicon states:
+![No New Mail](imgs/no_new_mails.png)
+![myimage-alt-tag](imgs/new_mail(s).png)
+![myimage-alt-tag](imgs/no_new_mails.png)
+<br />
+<br />
+##### Trayicon hover:
+![myimage-alt-tag](imgs/hover.png)
+<br />
+<br />
+##### Settings - Mail settings:
+![myimage-alt-tag](imgs/settings.png)
+![myimage-alt-tag](imgs/mail_settings.png)
+
 TO-DO list:
 ------------
 - [x] App freezes when checking for mails, that needs to be fixed (maybe use threads?).
