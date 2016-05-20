@@ -30,15 +30,15 @@ Screenshots
 -----------
 ##### Trayicon states:
 ![No New Mail](imgs/no_new_mails.png)
-![myimage-alt-tag](imgs/new_mail(s).png)
-![myimage-alt-tag](imgs/no_new_mails.png)
+![New Mail](imgs/new_mail(s).png)
+![Connection Problem](imgs/connection_problem.png)
 <br />
 ##### Trayicon hover:
-![myimage-alt-tag](imgs/hover.png)
+![Trayicon Hover](imgs/hover.png)
 <br />
 ##### Settings - Mail settings:
-![myimage-alt-tag](imgs/settings.png)
-![myimage-alt-tag](imgs/mail_settings.png)
+![Settings Dialog](imgs/settings.png)
+![Mail Settings Dialog](imgs/mail_settings.png)
 
 TO-DO list:
 ------------
