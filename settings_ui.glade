@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.18.3 -->
+<!-- Generated with glade 3.20.0 -->
 <interface>
-  <requires lib="gtk+" version="3.10"/>
+  <requires lib="gtk+" version="3.16"/>
   <object class="GtkImage" id="error_tray_icon">
     <property name="width_request">24</property>
     <property name="height_request">24</property>
@@ -28,7 +28,7 @@
   </object>
   <object class="GtkDialog" id="dialog1">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Settings</property>
+    <property name="border_width">7</property>
     <property name="resizable">False</property>
     <property name="type_hint">dialog</property>
     <property name="skip_taskbar_hint">True</property>
@@ -39,7 +39,7 @@
         <property name="can_focus">False</property>
         <property name="hexpand">True</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">5</property>
+        <property name="spacing">3</property>
         <property name="baseline_position">bottom</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area1">
@@ -72,17 +72,6 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">5</property>
-            <child>
-              <object class="GtkSeparator" id="separator1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
             <child>
               <object class="GtkFrame" id="frame1">
                 <property name="visible">True</property>
@@ -204,6 +193,7 @@
                   <object class="GtkLabel" id="mails">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">MailBoxes</property>
                     <attributes>
                       <attribute name="weight" value="bold"/>
@@ -215,17 +205,6 @@
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkSeparator" id="separator2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -247,17 +226,6 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="spacing">5</property>
-                <child>
-                  <object class="GtkSeparator" id="separator3">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkGrid" id="grid2">
                     <property name="visible">True</property>
@@ -342,23 +310,13 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkSeparator" id="separator4">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
               </object>
             </child>
             <child type="label">
               <object class="GtkLabel" id="external_apps">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">External Applications</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -386,17 +344,6 @@
                 <property name="halign">center</property>
                 <property name="hexpand">True</property>
                 <property name="spacing">5</property>
-                <child>
-                  <object class="GtkSeparator" id="separator5">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkBox" id="box8">
                     <property name="visible">True</property>
@@ -464,23 +411,13 @@
                     <property name="position">1</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkSeparator" id="separator6">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
               </object>
             </child>
             <child type="label">
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_bottom">5</property>
                 <property name="label" translatable="yes">Icons</property>
                 <attributes>
                   <attribute name="weight" value="bold"/>
@@ -494,6 +431,17 @@
             <property name="padding">5</property>
             <property name="position">3</property>
           </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="title">Settings</property>
+        <property name="show_close_button">True</property>
+        <child>
+          <placeholder/>
         </child>
       </object>
     </child>
