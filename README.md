@@ -4,7 +4,7 @@ until now it has been tested on GNU/Linux only and uses IMAP only
 
 Requirements:
 --------------
-gtk2  
+gtk3
 python2
 pygtk
 PyGObject 3.10.2+
@@ -25,6 +25,20 @@ imap.mail.com
 ### as for the IMAP field, here's an example of what you should type in:
 - Gmail -> `imap.gmail.com`
 - Yahoo -> `imap.yahoo.com`
+
+Screenshots
+-----------
+##### Trayicon states:
+![No New Mail](imgs/no_new_mails.png)
+![New Mail](imgs/new_mail(s).png)
+![Connection Problem](imgs/connection_problem.png)
+<br />
+##### Trayicon hover:
+![Trayicon Hover](imgs/hover.png)
+<br />
+##### Settings - Mail settings:
+![Settings Dialog](imgs/settings.png)
+![Mail Settings Dialog](imgs/mail_settings.png)
 
 TO-DO list:
 ------------
