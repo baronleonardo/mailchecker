@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 from gi.repository import Gtk
 from gi.repository import Notify
 import os
