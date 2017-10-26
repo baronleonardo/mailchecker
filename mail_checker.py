@@ -178,9 +178,19 @@ class MailChecker(QObject):
         """
         app = QApplication(sys.argv)
 
+        # create new tray icon passing 6 param
+        # PARAM 1: action for right click menu - on quit
+        # PARAM 2: action for right click menu - check for new emails
+        # PARAM 3: action for right click menu - show settings dialog
+        # PARAM 4: icon for no new emails state
+        # PARAM 5: icon for existance of unread/new emails
+        # PARAM 6: icon for error state
         self.__tray_icon = MailChecker_UI_TrayIcon(app.quit,
                                                    self.__check_all_accounts_for_new_emails,
-                                                   self. __show_settings_dialog)
+                                                   self. __show_settings_dialog,
+                                                   self.settings.read(MailChecker_Settings_Options.icon_normal),
+                                                   self.settings.read(MailChecker_Settings_Options.icon_new_email),
+                                                   self.settings.read(MailChecker_Settings_Options.icon_error))
         # TODO: find a better way
         self.__tray_icon.set_onLeftClick_action(
             self.settings.read(MailChecker_Settings_Options.on_click))

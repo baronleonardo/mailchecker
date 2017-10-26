@@ -15,13 +15,18 @@ class MailChecker_UI_TrayIcon(QSystemTrayIcon):
 
     __activated = pyqtSignal(QSystemTrayIcon.ActivationReason, str)
 
-    def __init__(self, on_quit_action, on_update_action, on_settings_action, parent=None):
+    def __init__(self, on_quit_action, on_update_action, on_settings_action, 
+                 normal_icon_path, new_emails_icon_path, error_icon_path,
+                 parent=None):
         super(MailChecker_UI_TrayIcon, self).__init__(parent)
 
         # Icons
-        self.normal_icon = QIcon.fromTheme("indicator-messages")
-        self.new_emails_icon = QIcon.fromTheme("indicator-messages-red")
-        self.error_icon = QIcon.fromTheme("indicator-messages-red")
+        # self.normal_icon = QIcon.fromTheme("indicator-messages")
+        # self.new_emails_icon = QIcon.fromTheme("indicator-messages-red")
+        # self.error_icon = QIcon.fromTheme("indicator-messages-red")
+        self.normal_icon = QIcon(normal_icon_path)
+        self.new_emails_icon = QIcon(new_emails_icon_path)
+        self.error_icon = QIcon(error_icon_path)
 
         # set icon for the initial state
         self.setIcon(self.normal_icon)
