@@ -198,7 +198,7 @@ class MailChecker(QObject):
                                         account_data['timeout'])
 
         self.__tray_icon.show()
-
+        QApplication.setQuitOnLastWindowClosed(False)
         app.exec_()
 
 
