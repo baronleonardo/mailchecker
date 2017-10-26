@@ -16,9 +16,9 @@ class MailChecker_Settings():
     __SETTINGS_FILE = os.path.join(__CURRENT_PATH, __SETTINGS_FILENAME)
 
     __SETTINGS_SECTION = 'Settings'
-    __SETTINGS_TEMPLATE = {'icon_normal': 'icons/indicator-messages.svg',
-                           'icon_new_email': 'icons/indicator-messages-new.svg',
-                           'icon_error': 'icons/indicator-messages-error.svg',
+    __SETTINGS_TEMPLATE = {'icon_normal': 'icons/Dark_Theme/indicator-messages.svg',
+                           'icon_new_email': 'icons/Dark_Theme/indicator-messages-new.svg',
+                           'icon_error': 'icons/Dark_Theme/indicator-messages-error.svg',
                            'on_click': '',
                            'on_new_email': ''}
 
