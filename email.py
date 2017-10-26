@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QObject
 import imaplib
+import socket
 
 class EMail(QObject):
     """
@@ -19,12 +20,12 @@ class EMail(QObject):
         try:
             self.__connection = imaplib.IMAP4_SSL(self.__imap)
 
-            print("connecting to %s ..." % self.__email)
             if self.__connection.login(self.__email, self.__password)[0] != 'OK':
                 exit("Authentication Failed!")
             print("Connected.")
             return True
-        except:
+        except socket.gaierror as error:
+            print(error)
             return False
 
     def disconnect(self):
@@ -34,7 +35,12 @@ class EMail(QObject):
 
     def __mailbox_open(self, is_read_only=True):
         print("mailbox name: %s" % self.__mailbox)
-        self.__connection.select(self.__mailbox, is_read_only)
+        status,_ = self.__connection.select(self.__mailbox, is_read_only)
+
+        if status != 'OK':
+            return False
+        else:
+            return True
 
     def __mailbox_close(self):
         self.__connection.close()
@@ -49,7 +55,9 @@ class EMail(QObject):
             return -1
 
         if auto_open_mailbox is True:
-            self.__mailbox_open()
+            if self.__mailbox_open() is False:
+                print("Error: bad mailbox name %s" % self.__mailbox)
+                return -1
 
         # get the uinque IDs for the unread messages
         status, unseen_emails = self.__connection.search(None, 'UNSEEN')
