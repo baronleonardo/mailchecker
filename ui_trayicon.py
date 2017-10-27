@@ -72,7 +72,7 @@ class MailChecker_UI_TrayIcon(QSystemTrayIcon):
 
         # change current icon if `state` is the current state
         if self.current_state == state:
-            self.setIcon(new_icon)
+            self.setIcon(QIcon(new_icon))
 
     def change_state(self, state: States):
         if state == self.States.NORMAL:

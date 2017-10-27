@@ -96,13 +96,13 @@ class MailChecker(QObject):
                 lambda newVal: self.settings.update(MailChecker_Settings_Options.on_new_email,
                                                     newVal))
             self.ui_settings.normalIconChanged.connect(
-                lambda newVal: self.settings.update(MailChecker_Settings_Options.icon_normal,
+                lambda newVal: self.__update_tray_icon(MailChecker_Settings_Options.icon_normal,
                                                     newVal))
             self.ui_settings.newEmailIconChanged.connect(
-                lambda newVal: self.settings.update(MailChecker_Settings_Options.icon_new_email,
-                                                    newVal))
+                lambda newVal: self.__update_tray_icon(Mailchecker_settings_options.icon_new_email,
+                                                    newval))
             self.ui_settings.errorIconChanged.connect(
-                lambda newVal: self.settings.update(MailChecker_Settings_Options.icon_error,
+                lambda newVal: self.__update_tray_icon(MailChecker_Settings_Options.icon_error,
                                                     newVal))
             self.ui_settings.newEmailAdded.connect(self.__onNewEmailAdded)
             self.ui_settings.emailRemoved.connect(self.__onEmailRemoved)
@@ -116,6 +116,21 @@ class MailChecker(QObject):
             self.ui_settings.newEmailAdded.disconnect()
             self.ui_settings.emailRemoved.disconnect()
             self.ui_settings.signalDialogClosed.disconnect()
+
+    def __update_tray_icon(self, state: MailChecker_Settings_Options, new_icon):
+        # update settings first
+        self.settings.update(state, new_icon)
+
+        # adopt state value
+        if state == MailChecker_Settings_Options.icon_normal:
+            state = MailChecker_UI_TrayIcon.States.NORMAL
+        if state == MailChecker_Settings_Options.icon_new_email:
+            state = MailChecker_UI_TrayIcon.States.NEW
+        if state == MailChecker_Settings_Options.icon_error:
+            state = MailChecker_UI_TrayIcon.States.ERROR
+
+        # update the trayicon
+        self.__tray_icon.change_icon(state, new_icon)
 
     def __activate_account(self,
                            email_name: str,
