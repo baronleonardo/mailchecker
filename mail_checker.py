@@ -99,8 +99,8 @@ class MailChecker(QObject):
                 lambda newVal: self.__update_tray_icon(MailChecker_Settings_Options.icon_normal,
                                                     newVal))
             self.ui_settings.newEmailIconChanged.connect(
-                lambda newVal: self.__update_tray_icon(Mailchecker_settings_options.icon_new_email,
-                                                    newval))
+                lambda newVal: self.__update_tray_icon(MailChecker_Settings_Options.icon_new_email,
+                                                    newVal))
             self.ui_settings.errorIconChanged.connect(
                 lambda newVal: self.__update_tray_icon(MailChecker_Settings_Options.icon_error,
                                                     newVal))

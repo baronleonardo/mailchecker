@@ -76,13 +76,13 @@ class MailChecker_UI_TrayIcon(QSystemTrayIcon):
 
     def change_state(self, state: States):
         if state == self.States.NORMAL:
-            self.setIcon(self.normal_icon)
+            self.setIcon(QIcon(self.normal_icon))
             # self.setToolTip("0 emails")
         elif state == self.States.NEW:
-            self.setIcon(self.new_emails_icon)
+            self.setIcon(QIcon(self.new_emails_icon))
             # self.setToolTip("%s emails" % str(new_emails))
         elif state == self.States.ERROR:
-            self.setIcon(self.error_icon)
+            self.setIcon(QIcon(self.error_icon))
             # self.setToolTip("Error!")
 
 
