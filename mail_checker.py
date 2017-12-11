@@ -64,7 +64,9 @@ class MailChecker(QObject):
     def __config_tooltip(self):
         tooltip = ""
         for account in self.accounts:
-            tooltip += "%5s: %i emails\r\n" % (account['email_name'], account['unread_emails'])
+            if tooltip != "":
+                tooltip += "\r\n"
+            tooltip += "%5s: %i emails" % (account['email_name'], account['unread_emails'])
         self.__tray_icon.setToolTip(tooltip)
 
     @pyqtSlot()
