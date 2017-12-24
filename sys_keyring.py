@@ -15,7 +15,8 @@ class MailChecker_Keyring():
             for __keyring in keyring.backend.get_all_keyring():
                 if __keyring.name.find('kwallet') != -1:
                     kwallet = __keyring
-                elif __keyring.name.find('Gnome Keyring') != -1:
+                # This is gnome keyring
+                elif __keyring.name.find('SecretService') != -1:
                     gnome_keyring = __keyring
 
             if kwallet != None:

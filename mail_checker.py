@@ -1,6 +1,6 @@
 import sys
 import threading
-from email import EMail
+from e_mail import EMail
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QObject, QTimer, pyqtSignal, pyqtSlot
 from ui_trayicon import MailChecker_UI_TrayIcon
