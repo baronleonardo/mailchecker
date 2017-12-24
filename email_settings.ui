@@ -139,7 +139,8 @@
         <item>
          <widget class="QSpinBox" name="timer_spinBox">
           <property name="toolTip">
-           <string>in minutes</string>
+           <string>check for new emails
+every amount of time in minutes</string>
           </property>
           <property name="buttonSymbols">
            <enum>QAbstractSpinBox::PlusMinus</enum>
