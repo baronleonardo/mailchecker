@@ -1,4 +1,4 @@
-import sys
+import os, sys
 import webbrowser
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog, QApplication
@@ -12,9 +12,11 @@ class UIAccountSettings(QDialog):
     # timer
     newEmailAdded = pyqtSignal(str, str, str, str, str, int)
 
+    CURR_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+
     def __init__(self, parent=None):
         super(UIAccountSettings, self).__init__(parent)
-        self.ui_settings = uic.loadUi('email_settings.ui', self)
+        self.ui_settings = uic.loadUi("%s/%s" % (self.CURR_PATH, 'email_settings.ui'), self)
 
         # hint button
         self.ui_settings.hintBtn.clicked.connect(self.__open_link)

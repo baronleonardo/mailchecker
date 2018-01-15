@@ -1,7 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog, QApplication, QFileDialog, QTableWidgetItem, QTableWidget, QMessageBox
 from PyQt5.QtGui import QIcon
-import sys
+import os, sys
 from PyQt5.QtCore import pyqtSignal, pyqtSlot
 from ui_account_settings import UIAccountSettings
 
@@ -44,6 +44,8 @@ class UISettings(QDialog):
     # fire a signal after settings dialog closed
     signalDialogClosed = pyqtSignal()
 
+    CURR_PATH = os.path.dirname(os.path.abspath(sys.argv[0]))
+
     def __init__(self, ui_data: UISettingsData, parent=None):
         # check for `ui_data` type
         if isinstance(ui_data, UISettingsData) is False:
@@ -51,7 +53,7 @@ class UISettings(QDialog):
             sys.exit(1)
 
         super(UISettings, self).__init__(parent)
-        self.ui_settings = uic.loadUi('settings.ui', self)
+        self.ui_settings = uic.loadUi("%s/%s" % (self.CURR_PATH, 'settings.ui'), self)
         self.__prepare_signals_and_slots()
 
         # prepare a dictionary to hold settings
@@ -108,7 +110,7 @@ class UISettings(QDialog):
     def __choose_new_icon_dialog(self, option: str):
         icon_name, _ = QFileDialog.getOpenFileName(self,
                                                    "choose new icon",
-                                                   "icons",
+                                                   "%s/%s" % (self.CURR_PATH, "icons"),
                                                    "Image Files (*.png *.jpg *.bmp *.svg)")
         if icon_name != "":
             self.__options[option]['set_value'](QIcon(icon_name))
